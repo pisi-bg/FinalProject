@@ -11,7 +11,7 @@ public class Product {
 	private String animal;
 	private String category;
 	private String brand;
-	private String brandInfo;
+//	private String brandInfo;
 	private double rating;
 	private int isStock;
 	private String image;
@@ -32,7 +32,7 @@ public class Product {
 		this.name = name;
 		this.description = description;
 		this.price = price;
-		this.brandInfo = manifactureInfo;
+//		this.brandInfo = manifactureInfo;
 		this.rating = rating;
 		this.image = image;
 	}

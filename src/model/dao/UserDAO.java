@@ -104,7 +104,7 @@ public class UserDAO {
 	//return user by email
 	public User getUser(String email) throws SQLException{
 		Connection con = DBManager.getInstance().getConnection();		
-		PreparedStatement stmt = con.prepareStatement("SELECT client_id as id, first_name , last_name, password, gender, isAdmin as admin"
+		PreparedStatement stmt = con.prepareStatement("SELECT user_id as id, first_name , last_name, password, gender, isAdmin as admin"
 												+ " FROM pisi.users WHERE email = ?");
 		stmt.setString(1, email);
 		ResultSet rs = stmt.executeQuery();

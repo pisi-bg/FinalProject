@@ -22,7 +22,6 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		
 		if(!UserDAO.isValidEmailAddress(email)){
 			response.getWriter().append("Invalid email");
 			return;
@@ -38,13 +37,14 @@ public class LoginServlet extends HttpServlet {
 				user = UserDAO.getInstance().getUser(email);
 				request.getSession().setAttribute("user", user);
 				//TODO update session to remain logged in and 
-				request.getRequestDispatcher("index.html").forward(request, response);
+				request.getRequestDispatcher("/login.jsp").forward(request, response);
 					
 			}else {
-				request.getRequestDispatcher("index.html").forward(request, response);
+				response.getWriter().append("sorry");
 			}
 		} catch (SQLException e) {
-			
+			//for demo purpose
+			response.getWriter().append("sql" + e.getMessage());
 		}
 		
 	}
