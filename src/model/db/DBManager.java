@@ -22,7 +22,7 @@ public class DBManager {
 		final String DB_PORT = "3306";
 		final String DB_DBNAME = "pisi";
 		final String DB_USER = "root";
-		final String DB_PASS = "balonche1";
+		final String DB_PASS = "root";
 
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,

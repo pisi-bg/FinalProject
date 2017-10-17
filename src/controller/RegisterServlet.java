@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.dao.UserDAO;
+import model.dao.UserDao;
 import model.pojo.User;
 
 @WebServlet("/register")
@@ -34,7 +34,7 @@ public class RegisterServlet extends HttpServlet {
 			response.getWriter().append("Last name is empty.");
 			return;
 		}
-		if(!UserDAO.isValidEmailAddress(email)){
+		if(!UserDao.isValidEmailAddress(email)){
 			response.getWriter().append("Invalid email.");
 			return;
 		}
@@ -46,11 +46,11 @@ public class RegisterServlet extends HttpServlet {
 		User u = new User(firstName, lastName, email, password, gender.equals("male") ? true : false);
 		
 		try {
-			if(UserDAO.getInstance().userExist(u)){
+			if(UserDao.getInstance().userExist(u)){
 				response.getWriter().append("Email exist.");
 				return;
 			}
-			UserDAO.getInstance().insertUser(u);
+			UserDao.getInstance().insertUser(u);
 		} catch (SQLException e) {
 			
 			// TODO redirect to error page

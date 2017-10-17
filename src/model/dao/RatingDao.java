@@ -5,10 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import model.DBManager;
+import model.db.DBManager;
 
 public class RatingDao {
-	
+
 	private static RatingDao instance;
 
 	private RatingDao() {
@@ -20,16 +20,17 @@ public class RatingDao {
 		}
 		return instance;
 	}
-	
-	public double getProductRating(long produc_id) throws SQLException{
-		
+
+	public double getProductRating(long produc_id) throws SQLException {
+
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement("SELECT AVG(r.rating) AS rating FROM pisi.ratings AS r WHERE r.product_id = ?");
+		PreparedStatement stmt = con
+				.prepareStatement("SELECT AVG(r.rating) AS rating FROM pisi.ratings AS r WHERE r.product_id = ?");
 		stmt.setLong(1, produc_id);
 		ResultSet rs = stmt.executeQuery();
 		rs.next();
 		double rating = rs.getDouble("rating");
-										// check if there is exception when DB return null !!!
+		// check if there is exception when DB return null !!!
 		return rating;
 	}
 

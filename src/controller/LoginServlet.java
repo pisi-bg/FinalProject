@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.dao.UserDAO;
+import model.dao.UserDao;
 import model.pojo.User;
 
 
@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
-		if(!UserDAO.isValidEmailAddress(email)){
+		if(!UserDao.isValidEmailAddress(email)){
 			response.getWriter().append("Invalid email");
 			return;
 		}
@@ -34,8 +34,8 @@ public class LoginServlet extends HttpServlet {
 		
 		User user = new User(email, password);
 		try {
-			if(UserDAO.getInstance().userExist(user)){
-				user = UserDAO.getInstance().getUser(email);
+			if(UserDao.getInstance().userExist(user)){
+				user = UserDao.getInstance().getUser(email);
 				request.getSession().setAttribute("user", user);
 				//TODO update session to remain logged in and 
 				request.getRequestDispatcher("index.html").forward(request, response);

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-import model.dao.ProductDAO;
+import model.dao.ProductDao;
 import model.pojo.Product;
 
 
@@ -25,7 +25,7 @@ public class ProductServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			HashMap<String, ArrayList<Product>> map = ProductDAO.getInstance().getProductsByAnimal(3);
+			HashMap<String, ArrayList<Product>> map = ProductDao.getInstance().getProductsByAnimal(3);
 			
 			for(Entry<String, ArrayList<Product>> e : map.entrySet()){
 				response.getWriter().append(e.getKey() + "\n");
