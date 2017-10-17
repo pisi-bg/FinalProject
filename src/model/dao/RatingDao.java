@@ -21,12 +21,12 @@ public class RatingDao {
 		return instance;
 	}
 
-	public double getProductRating(long produc_id) throws SQLException {
+	public double getProductRating(long productId) throws SQLException {
 
 		Connection con = DBManager.getInstance().getConnection();
 		PreparedStatement stmt = con
 				.prepareStatement("SELECT AVG(r.rating) AS rating FROM pisi.ratings AS r WHERE r.product_id = ?");
-		stmt.setLong(1, produc_id);
+		stmt.setLong(1, productId);
 		ResultSet rs = stmt.executeQuery();
 		rs.next();
 		double rating = rs.getDouble("rating");

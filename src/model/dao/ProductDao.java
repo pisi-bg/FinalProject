@@ -174,30 +174,36 @@ public class ProductDao {
 	public List<Product> getFavorites(long userId) throws SQLException {
 		List<Product> tempList = new ArrayList<>();
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement(
-				"SELECT p.product_id as id , p.product_name as name, p.description as description, AVG(r.raiting) as rating,"
-						+ " c.category_name as category, a.animal_name as animal, p.unit as unit, p.price_per_unit as price, p.discount as discount"
-						+ " m.brand_name as brand, m.description as manufacturerDescription" + " FROM pisi.product as p"
-						+ " JOIN pisi.product_category AS c ON (p.product_category_id = c.product_category_id)"
-						+ " JOIN pisi.manufacturer AS m ON (p.manufacturer_id = m.manifacture_id)"
-						+ " LEFT JOIN pisi.rating as r ON (p.product_id = r. product_id)"
-						+ " JOIN pisi.animal as a ON(p.animal_id = a.animal_id)"
-						+ "	JOIN pisi.client_has_favorites AS cf ON(p.product_id = cf.product_id)"
+		PreparedStatement stmt = con
+				.prepareStatement("SELECT p.product_id as id , p.product_name as name, p.description as description, "
+						+ " c.category_name as category, a.animal_name as animal, p.instock_count as unit, p.price as price,"
+						+ " m.brand_name as brand, m.brand_image as brandImage, p.image as image, p.discount as discount  FROM pisi.products as p"
+						+ " JOIN pisi.product_categories AS c ON (p.product_category_id = c.product_category_id)"
+						+ " JOIN pisi.brands AS m ON (p.brand_id = m.brand_id)"
+						+ " JOIN pisi.animals as a ON(p.animal_id = a.animal_id)"
+						+ "	JOIN pisi.users_has_favorites AS cf ON(p.product_id = cf.product_id)"
 						+ " WHERE p.product_id = ?" + " GROUP BY p.product_id");
 		stmt.setLong(1, userId);
 		ResultSet rs = stmt.executeQuery();
 
 		while (rs.next()) {
 			// check if there is no rating for this product DB will return null;
-			Double rating = new Double(rs.getDouble("rating"));
-			if (rating.equals(null)) {
-				rating = new Double(0);
-			}
+			double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
 
-			tempList.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-					rs.getInt("price"), rs.getString("animal"), rs.getString("category"), rs.getString("brand"),
-					rs.getString("manufacturerDescription"), rating, rs.getInt("unit"), rs.getString("image"),
-					rs.getInt("discount")));
+			long id = rs.getLong("id");
+			String name = rs.getString("name");
+			String description = rs.getString("description");
+			double price = rs.getLong("price");
+			String animal = rs.getString("animal");
+			String category = rs.getString("category");
+			String brand = rs.getString("brand");
+			String brandImage = rs.getString("brandImage");
+			int isStock = rs.getInt("unit");
+			String image = rs.getString("image");
+			int discount = rs.getInt("discount");
+			tempList.add(new Product(id, name, description, price, animal, category, brand, brandImage, rating, isStock,
+					image, discount));
+
 		}
 		return tempList;
 	}

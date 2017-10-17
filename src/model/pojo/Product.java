@@ -10,6 +10,7 @@ public class Product {
 	private String category;
 	private String brand;
 	private String brandImage;
+	// private String brandInfo;
 	private double rating;
 	private int isStock;
 	private String image;
@@ -22,14 +23,25 @@ public class Product {
 		this.isStock = isStock;
 	}
 
+	// TODO removed the old one -> check if needed
+	// public Product(long id, String name, String description, double price,
+	// String animal, String category, String brand,
+	// String manifactureInfo, double rating, int isStock, String image) {
+	// this(id,name,description,price,manifactureInfo,image,rating);
+	// this.animal = animal;
+	// this.category = category;
+	// this.brand = brand;
+	// this.rating = rating;
+	// this.isStock = isStock;
+	// }
 	// constructor to retrieve short info from DB for orders history
+
 	public Product(long id, String name, String description, double price, int discount, String animal, String category,
 			String image, double rating, String brand) {
 		this(id, name, description, price, category, rating, image);
 		this.discount = discount;
 		this.animal = animal;
 		this.brand = brand;
-
 	}
 
 	public Product(long id, String name, String description, double price, String category, double rating,
