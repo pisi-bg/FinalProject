@@ -25,7 +25,7 @@ public class ProductServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			HashMap<String, ArrayList<Product>> map = ProductDAO.getInstance().getProductsByAnimal(1);
+			HashMap<String, ArrayList<Product>> map = ProductDAO.getInstance().getProductsByAnimal(3);
 			
 			for(Entry<String, ArrayList<Product>> e : map.entrySet()){
 				response.getWriter().append(e.getKey() + "\n");

@@ -32,19 +32,16 @@ public class LoginServlet extends HttpServlet {
 			return;
 		}
 		
-		User u = new User( email, password);
+		User user = new User(email, password);
 		try {
-			if(UserDAO.getInstance().userExist(u)){
-				if(UserDAO.getInstance().verifiedPassword(u)){
-					response.getWriter().append("Login complete");
+			if(UserDAO.getInstance().userExist(user)){
+				user = UserDAO.getInstance().getUser(email);
+				request.getSession().setAttribute("user", user);
+				//TODO update session to remain logged in and 
+				request.getRequestDispatcher("index.html").forward(request, response);
 					
-					//TODO update session to remain logged in and 
-					
-				}else {
-					response.getWriter().append("Wrong password");
-				}
 			}else {
-				response.getWriter().append("User not exist");
+				request.getRequestDispatcher("index.html").forward(request, response);
 			}
 		} catch (SQLException e) {
 			

@@ -56,7 +56,7 @@ public class UserDAO {
 	// this method insert user info to database
 	public void insertUser(User u) throws SQLException{
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement ps = con.prepareStatement("INSERT INTO pisi.client (first_name,last_name,email,password,gender, isAdmin) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement ps = con.prepareStatement("INSERT INTO pisi.users (first_name,last_name,email,password,gender, isAdmin) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, u.getFirstName());
 		ps.setString(2, u.getLastName());
 		ps.setString(3, u.getEmail());
@@ -78,15 +78,7 @@ public class UserDAO {
 		
 	}
 	
-	//this method check if user exists in the database
-	public boolean userExist(User u) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement("SELECT first_name as name FROM pisi.client WHERE email = ?");
-		stmt.setString(1, u.getEmail());
-		ResultSet rs = stmt.executeQuery();		
-		return rs.next();
-	}
-	
+		
 	//this method checks if this i a valid email 
 	public static boolean isValidEmailAddress(String email) {
 		   boolean result = true;
@@ -99,10 +91,10 @@ public class UserDAO {
 		  return result;
 	}
 	
-	//this method checks if this password is right for this email
-	public boolean verifiedPassword(User u) throws SQLException {
+	//this method check if user exists in the database
+	public boolean userExist(User u) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement("SELECT first_name as name FROM pisi.client WHERE email = ? AND password = ?");
+		PreparedStatement stmt = con.prepareStatement("SELECT first_name as name FROM pisi.users WHERE email = ? AND password = ?");
 		stmt.setString(1, u.getEmail());
 		stmt.setString(2, u.getPassword());
 		ResultSet rs = stmt.executeQuery();		
@@ -112,7 +104,8 @@ public class UserDAO {
 	//return user by email
 	public User getUser(String email) throws SQLException{
 		Connection con = DBManager.getInstance().getConnection();		
-		PreparedStatement stmt = con.prepareStatement("SELECT client_id as id, first_name , last_name, password, gender, isAdmin as admin  FROM pisi.client WHERE email = ?");
+		PreparedStatement stmt = con.prepareStatement("SELECT client_id as id, first_name , last_name, password, gender, isAdmin as admin"
+												+ " FROM pisi.users WHERE email = ?");
 		stmt.setString(1, email);
 		ResultSet rs = stmt.executeQuery();
 		rs.next();
@@ -123,7 +116,7 @@ public class UserDAO {
 	// update user data, no need to return User because we will already have it in the servlet
 	public boolean updateUser(User u) throws SQLException{		
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement("UPDATE pisi.client SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ?, gender= ? WHERE client_id= ?;");
+		PreparedStatement stmt = con.prepareStatement("UPDATE pisi.users SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ?, gender= ? WHERE users_id= ?;");
 		stmt.setString(1, u.getFirstName());
 		stmt.setString(2, u.getLastName());
 		stmt.setString(3, u.getEmail());
