@@ -42,4 +42,38 @@ public class DeliveryInfo {
 		this.deliveryInfoId = deliveryInfoId;
 	}
 
+	public long getDeliveryInfoId() {
+		return deliveryInfoId;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public int getZipCode() {
+		return zipCode;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public String getRecieverFirstName() {
+		return recieverFirstName;
+	}
+
+	public String getRecieverLastName() {
+		return recieverLastName;
+	}
+
+	public String getRecieverPhone() {
+		return recieverPhone;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	// getters
+
 }

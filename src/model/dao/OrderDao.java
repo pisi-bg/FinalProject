@@ -98,6 +98,7 @@ public class OrderDao {
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
 		order.setId(rs.getLong(1));
+		// TODO add products from order in DB; think about get delivery_info_id
 		return result == 1 ? true : false;
 	}
 
