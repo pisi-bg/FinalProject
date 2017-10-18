@@ -11,7 +11,7 @@ import model.pojo.DeliveryInfo;
 
 public class DeliveryInfoDao {
 
-	public long insertDelivInfoOrder(long orderId, DeliveryInfo delivInfo) throws SQLException {
+	public void insertDelivInfoOrder(long orderId, DeliveryInfo delivInfo) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
 
 		String cityName = delivInfo.getCity();
@@ -31,7 +31,6 @@ public class DeliveryInfoDao {
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
 		delivInfo.setDeliveryInfoId(rs.getLong(1));
-		return rs.getLong(1);
 	}
 
 	public int retrieveCityId(String cityName) throws SQLException {

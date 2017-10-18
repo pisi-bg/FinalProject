@@ -132,9 +132,26 @@ public class ProductDao {
 				rs.getInt("discount"));
 	}
 
-	public List<Product> getProductsByBrand(int brand_id) {
-		return null;
-		// TODO
+	public List<Product> getProductsByBrand(int brand_id) throws SQLException {
+		ArrayList<Product> products = new ArrayList<>();
+		Connection con = DBManager.getInstance().getConnection();
+		PreparedStatement stmt = con.prepareStatement(
+				"SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
+						+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image "
+						+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
+						+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
+						+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
+						+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id) " + "WHERE p.brand_id =?;");
+		stmt.setInt(1, brand_id);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			// check if there is a problem with returning a null from db for
+			// rating !!!
+			double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
+			products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+					rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+		}
+		return products;
 	}
 
 	public List<Product> getProductsInPromotion() throws SQLException {
@@ -194,13 +211,89 @@ public class ProductDao {
 		return tempList;
 	}
 
+	public List<Product> searchProductByWord(String word) throws SQLException {
+		ArrayList<Product> products = new ArrayList<>();
+		Connection con = DBManager.getInstance().getConnection();
+		PreparedStatement stmt = con.prepareStatement(
+				"SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
+						+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image "
+						+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
+						+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
+						+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
+						+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id) "
+						+ "WHERE p.product_name LIKE '%?%' OR p.description LIKE '%?%';");
+		stmt.setString(1, word);
+		stmt.setString(2, word);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			// check if there is a problem with returning a null from db for
+			// rating !!!
+			double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
+			products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+					rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+		}
+		return products;
+	}
+
+	public List<Product> getTopSoldProducts(int countLimit) throws SQLException {
+		ArrayList<Product> products = new ArrayList<>();
+		Connection con = DBManager.getInstance().getConnection();
+		PreparedStatement stmt = con
+				.prepareStatement("SELECT  op.product_id as id, p.product_name as name , a.animal_name as animal, "
+						+ "c.category_name as category , p.price as price, p.description as description, "
+						+ "p.image_url as image, SUM(op.product_quantity) as countSold"
+						+ "FROM orders_has_products as op" + "JOIN pisi.products as p ON(op.product_id = p.product_id)"
+						+ "JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
+						+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
+						+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
+						+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
+						+ "GROUP by op.product_id ORDER BY SUM(op.product_quantity) desc LIMIT ?;");
+		stmt.setInt(1, countLimit);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			// check if there is a problem with returning a null from db for
+			// rating !!!
+			double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
+			products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+					rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+		}
+		return products;
+	}
+
+	public List<Product> getTopSoldProductsByAnimal(int countLimit, int animalId) throws SQLException {
+		ArrayList<Product> products = new ArrayList<>();
+		Connection con = DBManager.getInstance().getConnection();
+		PreparedStatement stmt = con.prepareStatement(
+				"SELECT  op.product_id as product_id, p.product_name as name , a.animal_name as animal,"
+						+ "c.category_name as category , p.price, p.description, pc.category_name as parent_category,"
+						+ "p.image_url as image, a.animal_id as animal, SUM(op.product_quantity) as countSold"
+						+ "FROM orders_has_products as op" + "JOIN pisi.products as p ON(op.product_id = p.product_id)"
+						+ "JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
+						+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
+						+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
+						+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
+						+ "GROUP by op.product_id HAVING a.animal_id=?"
+						+ "ORDER BY SUM(op.product_quantity)  desc  LIMIT ? ;");
+		stmt.setInt(1, animalId);
+		stmt.setInt(1, countLimit);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			// check if there is a problem with returning a null from db for
+			// rating !!!
+			double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
+			products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+					rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+		}
+		return products;
+	}
+
 	public double calcDiscountedPrice(Product p) {
 		double newPrice = p.getPrice() * ((100 - p.getDiscount()) / 100.0);
 		return newPrice;
 	}
 
 	// updating in stock quantity for product
-	public boolean removeQuantity(long productId, int invokedQuantity) throws SQLException {
+	public boolean removeQuantity(long productId, int quantityToRemove) throws SQLException {
 		int result = -1;
 		Connection con = DBManager.getInstance().getConnection();
 		// checks if there is enough quantity
@@ -208,9 +301,9 @@ public class ProductDao {
 		stmt.setLong(1, productId);
 		ResultSet rs = stmt.executeQuery();
 		int currentInstockCount = rs.getInt("instock_count");
-		if (invokedQuantity >= currentInstockCount) {
+		if (quantityToRemove >= currentInstockCount) {
 			stmt = con.prepareStatement("UPDATE pisi.products SET instock_count = ? WHERE product_id = ? ");
-			int newQuantity = currentInstockCount - invokedQuantity;
+			int newQuantity = currentInstockCount - quantityToRemove;
 			stmt.setLong(1, newQuantity);
 			stmt.setLong(2, productId);
 			result = stmt.executeUpdate();
@@ -227,7 +320,7 @@ public class ProductDao {
 
 	// ***ADMIN operations***
 
-	// make a discount of product price
+	// add discount of product price
 	public boolean setInPromotion(long productId, int percentDiscount) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
 		PreparedStatement stmt = con.prepareStatement("UPDATE pisi.products SET discount = ? WHERE product_id = ? ",
@@ -252,7 +345,7 @@ public class ProductDao {
 			stmt.setLong(2, product_id);
 			return stmt.executeUpdate() == 1 ? true : false;
 		} else {
-			// throw noSuchProductException
+			// throw noSuchProductException;
 			return false;
 		}
 	}
@@ -287,6 +380,7 @@ public class ProductDao {
 			ps.setString(9, p.getImage());
 			ps.executeUpdate();
 			con.commit();
+			con.setAutoCommit(true);
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
 			p.setId(rs.getLong(1));
@@ -305,7 +399,6 @@ public class ProductDao {
 		Connection con = DBManager.getInstance().getConnection();
 		con.setAutoCommit(false);
 		try {
-
 			PreparedStatement ps = con.prepareStatement("DELETE FROM pisi.products WHERE product_id=?;");
 			ps.setLong(1, p.getId());
 			ps.executeUpdate();
@@ -319,6 +412,7 @@ public class ProductDao {
 			ps.setLong(1, p.getId());
 			ps.executeUpdate();
 			con.commit();
+			con.setAutoCommit(true);
 		} catch (SQLException e) {
 			try {
 				con.rollback();
