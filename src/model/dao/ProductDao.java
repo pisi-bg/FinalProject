@@ -32,13 +32,12 @@ public class ProductDao {
 		HashMap<String, ArrayList<Product>> products = new HashMap<>();
 
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement(
-				"SELECT p.product_id AS id, p.product_name AS name , c.category_name AS category , p.price AS price, "
-						+ "p.description AS description, pc.category_name AS parent_category, p.image_url AS image "
-						+ "FROM pisi.products AS p " + "JOIN pisi.animals AS a ON (p.animal_id = a.animal_id) "
-						+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
-						+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
-						+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) " + "WHERE p.animal_id = ?;");
+		PreparedStatement stmt = con.prepareStatement("SELECT p.product_id AS id, p.product_name AS name , c.category_name AS category , p.price AS price, "
+													+ "p.description AS description, pc.category_name AS parent_category, p.image_url AS image "
+													+ "FROM pisi.products AS p " + "JOIN pisi.animals AS a ON (p.animal_id = a.animal_id) "
+													+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
+													+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
+													+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) " + "WHERE p.animal_id = ?;");
 		stmt.setInt(1, animalId);
 		ResultSet rs = stmt.executeQuery();
 		String category = null;
@@ -164,7 +163,7 @@ public class ProductDao {
 		PreparedStatement stmt = con
 				.prepareStatement("SELECT p.product_id as id , p.product_name as name, p.description as description, "
 						+ " c.category_name as category, a.animal_name as animal, p.instock_count as unit, p.price as price,"
-						+ " m.brand_name as brand, m.brand_image as brandImage, p.image as image, p.discount as discount  FROM pisi.products as p"
+						+ " m.brand_name as brand, m.logo_image as brandImage, p.image_url as image, p.discount as discount  FROM pisi.products as p"
 						+ " JOIN pisi.product_categories AS c ON (p.product_category_id = c.product_category_id)"
 						+ " JOIN pisi.brands AS m ON (p.brand_id = m.brand_id)"
 						+ " JOIN pisi.animals as a ON(p.animal_id = a.animal_id)"

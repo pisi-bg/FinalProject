@@ -10,6 +10,18 @@ import model.db.DBManager;
 import model.pojo.DeliveryInfo;
 
 public class DeliveryInfoDao {
+	
+	private static DeliveryInfoDao instance;
+
+	private DeliveryInfoDao() {
+	}
+
+	public static synchronized DeliveryInfoDao getInstance() {
+		if (instance == null) {
+			instance = new DeliveryInfoDao();
+		}
+		return instance;
+	}
 
 	public long insertDelivInfoOrder(long orderId, DeliveryInfo delivInfo) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
