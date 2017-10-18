@@ -116,7 +116,7 @@ public class UserDao {
 		stmt.setString(1, email);
 		ResultSet rs = stmt.executeQuery();
 		rs.next();
-		User u = new User(rs.getLong("id"), rs.getString("first_name"), rs.getString("last_name"), email,
+		User u = new User(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"), email,
 				rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"),
 				ProductDao.getInstance().getFavorites(rs.getLong("id")));
 		return u;
