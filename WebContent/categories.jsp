@@ -9,6 +9,7 @@
 </head>
 <body>
 	
+	
 	<c:if test="${ sessionScope.animal != null }">
 		<a href="category?animal=${sessionScope.animal }&id=1"><button>Food</button></a>
 		<a href="category?animal=${sessionScope.animal }&id=2"><button>Accessories</button></a>
@@ -23,7 +24,9 @@
 		
 		<c:if test="${ sessionScope.animal == 1 || sessionScope.animal == 5 || sessionScope.animal == 6 }">
 			<a href="category?animal=${sessionScope.animal }&id=5"><button>Aquariums And Cages</button></a>
-		</c:if>
+		</c:if><br><br>
+		
+		<jsp:include page="subCategories.jsp"></jsp:include>
 		
 	</c:if>
 	
