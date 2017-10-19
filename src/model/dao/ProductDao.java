@@ -33,13 +33,13 @@ public class ProductDao {
 		HashMap<String, ArrayList<Product>> products = new HashMap<>();
 
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement("SELECT p.product_id AS id, p.product_name AS name , c.category_name AS category , p.price AS price, "
-													+ "p.description AS description, pc.category_name AS parent_category, p.image_url AS image "
-													+ "FROM pisi.products AS p " + "JOIN pisi.animals AS a ON (p.animal_id = a.animal_id) "
-													+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
-													+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
-													+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) "
-													+ "WHERE p.animal_id = ?;");
+		PreparedStatement stmt = con.prepareStatement(
+				"SELECT p.product_id AS id, p.product_name AS name , c.category_name AS category , p.price AS price, "
+						+ "p.description AS description, pc.category_name AS parent_category, p.image_url AS image "
+						+ "FROM pisi.products AS p " + "JOIN pisi.animals AS a ON (p.animal_id = a.animal_id) "
+						+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
+						+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
+						+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) " + "WHERE p.animal_id = ?;");
 		stmt.setInt(1, animalId);
 		ResultSet rs = stmt.executeQuery();
 		String category = null;
@@ -58,31 +58,32 @@ public class ProductDao {
 
 	// this method returns all product for given animal id and given parent
 	// category ID
-	public Map<String, List<Product>> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId) throws SQLException {
+	public Map<String, List<Product>> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId)
+			throws SQLException {
 		Map<String, List<Product>> temp = new HashMap<>();
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement("SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , p.price,"
-														+ " p.description, pc.category_name as parent_category, p.image_url as image "
-														+ "	FROM pisi.products as p"
-														+ " JOIN pisi.animals as a ON (p.animal_id = a.animal_id)"
-														+ " JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
-														+ " JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id)"
-														+ " JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
-														+ " WHERE c.parent_category_id = ? AND p.animal_id = ?;");
+		PreparedStatement stmt = con.prepareStatement(
+				"SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , p.price,"
+						+ " p.description, pc.category_name as parent_category, p.image_url as image "
+						+ "	FROM pisi.products as p" + " JOIN pisi.animals as a ON (p.animal_id = a.animal_id)"
+						+ " JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
+						+ " JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id)"
+						+ " JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
+						+ " WHERE c.parent_category_id = ? AND p.animal_id = ?;");
 		stmt.setLong(1, parentCategoryId);
 		stmt.setLong(2, animalId);
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
 			String category = rs.getString("category");
-			
-			if(!temp.containsKey(category)){
+
+			if (!temp.containsKey(category)) {
 				temp.put(category, new ArrayList<>());
 			}
 			double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
 			Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 					rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"));
 			temp.get(category).add(p);
-			
+
 		}
 		return temp;
 	}
@@ -118,25 +119,29 @@ public class ProductDao {
 	public Product getProduct(long productId) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
 		PreparedStatement stmt = con.prepareStatement(
-				"SELECT p.product_id as id , p.product_name as name, p.description as description, AVG(r.raiting) as rating,"
-						+ " c.category_name as category, a.animal_name as animal, p.unit as unit, p.price_per_unit as price, p.discount as discount"
-						+ " m.brand_name as brand, m.description as manufacturerDescription" + " FROM pisi.product as p"
-						+ " JOIN pisi.product_category AS c ON (p.product_category_id = c.product_category_id)"
-						+ " JOIN pisi.manufacturer AS m ON (p.manufacturer_id = m.manifacture_id)"
-						+ " LEFT JOIN pisi.rating as r ON (p.product_id = r. product_id)"
-						+ " JOIN pisi.animal as a ON(p.animal_id = a.animal_id)" + " WHERE p.product_id = ?");
+				"SELECT p.product_id as id , p.product_name as name, p.description as description, p.instock_count as unit, "
+						+ " c.category_name as category, a.animal_name as animal, p.price as price, p.discount as discount,"
+						+ " b.brand_name as brand, b.logo_image as brandlogo, p.image_url as image , AVG(r.rating) as rating "
+						+ "	FROM pisi.products as p"
+						+ " JOIN pisi.product_categories AS c ON (p.product_category_id = c.product_category_id)"
+						+ " JOIN pisi.brands AS b ON (p.brand_id = b.brand_id)"
+						+ " LEFT JOIN pisi.ratings as r ON (p.product_id = r. product_id) "
+						+ " JOIN pisi.animals as a ON(p.animal_id = a.animal_id) WHERE p.product_id = ?;");
 		stmt.setLong(1, productId);
 		ResultSet rs = stmt.executeQuery();
+		if (rs.next()) {
+			Double rating = new Double(rs.getDouble("rating"));
+			if (rating.equals(null)) {
+				rating = new Double(0);
+			}
 
-		Double rating = new Double(rs.getDouble("rating"));
-		if (rating.equals(null)) {
-			rating = new Double(0);
+			return new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getInt("price"),
+					rs.getString("animal"), rs.getString("category"), rs.getString("brand"), rs.getString("brandlogo"),
+					rating, rs.getInt("unit"), rs.getString("image"), rs.getInt("discount"));
+		} else {
+			// TODO throw InvalidDataException
+			return null;
 		}
-
-		return new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getInt("price"),
-				rs.getString("animal"), rs.getString("category"), rs.getString("brand"),
-				rs.getString("manufacturerDescription"), rating, rs.getInt("unit"), rs.getString("image"),
-				rs.getInt("discount"));
 	}
 
 	public List<Product> getProductsByBrand(int brand_id) throws SQLException {
