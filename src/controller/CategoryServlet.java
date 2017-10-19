@@ -28,11 +28,11 @@ public class CategoryServlet extends HttpServlet {
 		try {
 			products = ProductDao.getInstance().getProductsByAnimalAndParentCategory(animal,category);
 			request.getSession().setAttribute("productsForCategory", products);
+			request.setAttribute("id", category); // in request so every time you change animal category sub-categories will be not remembered
 		} catch (SQLException e) {
 			// TODO re-direct to error page and re-throw e;
 			e.printStackTrace();
 		}
-		System.out.println(products);
 		request.getRequestDispatcher("parentCategory.jsp").forward(request, response);
 	}
 

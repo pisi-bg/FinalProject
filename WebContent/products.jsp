@@ -14,7 +14,7 @@
 		
 		<c:if test="${ sessionScope.products != null }">
 		
-			<jsp:include page="category.jsp"></jsp:include>
+			<jsp:include page="categories.jsp"></jsp:include>
 			
 			<c:forEach items="${ sessionScope.products }" var="products">
 				<h4> ${ products.key } </h4>
