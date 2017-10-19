@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.db.DBManager;
 import model.pojo.Product;
@@ -37,7 +38,8 @@ public class ProductDao {
 													+ "FROM pisi.products AS p " + "JOIN pisi.animals AS a ON (p.animal_id = a.animal_id) "
 													+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
 													+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
-													+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) " + "WHERE p.animal_id = ?;");
+													+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) "
+													+ "WHERE p.animal_id = ?;");
 		stmt.setInt(1, animalId);
 		ResultSet rs = stmt.executeQuery();
 		String category = null;
@@ -56,32 +58,38 @@ public class ProductDao {
 
 	// this method returns all product for given animal id and given parent
 	// category ID
-	List<Product> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId) throws SQLException {
-		List<Product> products = new ArrayList<>();
+	public Map<String, List<Product>> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId) throws SQLException {
+		Map<String, List<Product>> temp = new HashMap<>();
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con.prepareStatement(
-				"SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , p.price,"
-						+ " p.description, pc.category_name as parent_category, p.image_url as image "
-						+ "	FROM pisi.products as p" + " JOIN pisi.animals as a ON (p.animal_id = a.animal_id)"
-						+ " JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
-						+ " JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id)"
-						+ " JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
-						+ " WHERE c.parent_category_id = ? AND p.animal_id = ?;");
+		PreparedStatement stmt = con.prepareStatement("SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , p.price,"
+														+ " p.description, pc.category_name as parent_category, p.image_url as image "
+														+ "	FROM pisi.products as p"
+														+ " JOIN pisi.animals as a ON (p.animal_id = a.animal_id)"
+														+ " JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
+														+ " JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id)"
+														+ " JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
+														+ " WHERE c.parent_category_id = ? AND p.animal_id = ?;");
 		stmt.setLong(1, parentCategoryId);
 		stmt.setLong(2, animalId);
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
-			// check if there is problem with returning null !!!!
+			String category = rs.getString("category");
+			
+			if(!temp.containsKey(category)){
+				temp.put(category, new ArrayList<>());
+			}
 			double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
-			products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-					rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+			Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+					rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"));
+			temp.get(category).add(p);
+			
 		}
-		return products;
+		return temp;
 	}
 
 	// this method returns list of product for given animal id and sub-category
 	// id;
-	List<Product> getProductsByAnimalAndSubCategory(long animalId, long categoryId) throws SQLException {
+	public List<Product> getProductsByAnimalAndSubCategory(long animalId, long categoryId) throws SQLException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = DBManager.getInstance().getConnection();
 		PreparedStatement stmt = con.prepareStatement(

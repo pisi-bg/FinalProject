@@ -32,13 +32,14 @@ public class LoginServlet extends HttpServlet {
 			return;
 		}
 
+
 		User user = new User(email, password);
 		try {
 			if (UserDao.getInstance().userExist(user)) {
 				user = UserDao.getInstance().getUser(email);
 				request.getSession().setAttribute("user", user);
 				// TODO update session to remain logged in and
-				request.getRequestDispatcher("/login.jsp").forward(request, response);
+				request.getRequestDispatcher("/products.jsp").forward(request, response);
 
 			} else {
 				response.getWriter().append("sorry");

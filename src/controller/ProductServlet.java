@@ -23,19 +23,15 @@ public class ProductServlet extends HttpServlet {
        
   
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getParameter("animal") == null){			
-			request.getRequestDispatcher("products.jsp").forward(request, response);
-			return;
-		}
 		
-		String animal = request.getParameter("animal");
-		int animalID = getAnimalIdx(animal);  // only for demo purpose !!!
+		int animal = Integer.parseInt(request.getParameter("animal"));
 		
 		try {			
-			HashMap<String, ArrayList<Product>> products = ProductDao.getInstance().getProductsByAnimal(animalID);
+			HashMap<String, ArrayList<Product>> products = ProductDao.getInstance().getProductsByAnimal(animal);
 			request.getSession().setAttribute("products", products);
+			request.getSession().setAttribute("animal", animal);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// TODO redirect to error page and re-throw e;
 			e.printStackTrace();
 		}
 		request.getRequestDispatcher("products.jsp").forward(request, response);
@@ -46,24 +42,4 @@ public class ProductServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private int getAnimalIdx(String animal){
-	
-		switch (animal) {
-		case "aqua":
-			return 1;
-		case "cat":
-			return 2;
-		case "dog":
-			return 3;
-		case "little":
-			return 4;
-		case "bird":
-			return 5;
-		case "reptile":
-			return 6;
-		default:
-			return 0;
-		}
-	}
-
 }

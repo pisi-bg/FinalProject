@@ -1,6 +1,8 @@
 package model.pojo;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable{
 
 	private long id;
 	private String name;

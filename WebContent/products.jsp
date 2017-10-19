@@ -10,14 +10,12 @@
 </head>
 	<body>		
 				
-		<a href="products?animal=aqua"><button>Aquaristics</button></a>
-		<a href="products?animal=cat"><button>Cats</button></a>
-		<a href="products?animal=dog"><button>Dogs</button></a>
-		<a href="products?animal=little"><button>Little Fellows </button></a>
-		<a href="products?animal=bird"><button>Birds</button></a>
-		<a href="products?animal=reptile"><button>Reptiles</button></a>
+		<jsp:include page="header.jsp"></jsp:include><br><br>
 		
 		<c:if test="${ sessionScope.products != null }">
+		
+			<jsp:include page="category.jsp"></jsp:include>
+			
 			<c:forEach items="${ sessionScope.products }" var="products">
 				<h4> ${ products.key } </h4>
 				<table border="1">
@@ -26,7 +24,12 @@
 							<td>${pro.name }</td>
 							<td>${pro.description }</td>
 							<td>${pro.price }</td>
-							<td>${pro.brand }</td>
+							<c:if test="${pro.rating != 0 }">
+								<td>${pro.rating }</td>
+							</c:if>
+							<c:if test="${pro.rating == 0 }">
+								<td>No rating</td>
+							</c:if>
 							<td>${pro.rating }</td>
 						</tr>
 					</c:forEach>
