@@ -16,6 +16,7 @@ public class CartServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		// check if logged
 		// retrieve all products that have been chosen for purchase
 	}

@@ -27,14 +27,24 @@ public class ImageDao {
 	public List<String> getImagesForProduct(long product_id) throws SQLException {
 		List<String> images = new ArrayList<>();
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement ps = con.prepareStatement("SELECT image_url AS url FROM pisi.images WHERE product_id = ?");
-		ps.setLong(1, product_id);
-		ResultSet rs = ps.executeQuery();
-		while (rs.next()) {
-			images.add(rs.getString("url"));
+		String query = "SELECT image_url AS url FROM pisi.images WHERE product_id = ?";
+		ResultSet rs = null;
+		try (PreparedStatement ps = con.prepareStatement(query);) {
+			ps.setLong(1, product_id);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				images.add(rs.getString("url"));
+			}
+			return images;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if(rs != null){
+				rs.close();
+			}
 		}
-
-		return images;
+		
+		
 	}
 
 }

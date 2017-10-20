@@ -13,7 +13,7 @@
 	<jsp:include page="header.jsp"></jsp:include><br>
 	<br>
 
-<c:if test="${ sessionScope.cart != null }">
+	<c:if test="${ sessionScope.cart != null }">
 		<c:forEach items="${ sessionScope.cart }" var="cart">
 			<h4>${ order.datetime }</h4>
 			<table border="1">
@@ -45,7 +45,6 @@
 			<hr>
 		</c:forEach>
 	</c:if>
-
-
+	
 </body>
 </html>

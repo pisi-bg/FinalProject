@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-// Singleton
+ 
 public class DBManager {
 
 	private static DBManager instance;
+	
 	private Connection con;
+	private Connection adminCon;
 
 	// constructor
 	private DBManager() {
@@ -22,7 +24,7 @@ public class DBManager {
 		final String DB_PORT = "3306";
 		final String DB_DBNAME = "pisi";
 		final String DB_USER = "root";
-		final String DB_PASS = "root";
+		final String DB_PASS = "balonche1";
 
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
@@ -33,7 +35,7 @@ public class DBManager {
 		}
 
 	}
-
+	
 	// return only instance of this class
 	public static synchronized DBManager getInstance() {
 		if (instance == null) {
@@ -45,6 +47,11 @@ public class DBManager {
 	// return connection to the database
 	public Connection getConnection() {
 		return con;
+	}
+	
+	// return admin connection to the database
+	public Connection getAdminCon() {
+		return adminCon;
 	}
 
 	// close connection to the database when server is shutdown

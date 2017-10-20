@@ -24,14 +24,22 @@ public class RatingDao {
 	public double getProductRating(long productId) throws SQLException {
 
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement stmt = con
-				.prepareStatement("SELECT AVG(r.rating) AS rating FROM pisi.ratings AS r WHERE r.product_id = ?");
-		stmt.setLong(1, productId);
-		ResultSet rs = stmt.executeQuery();
-		rs.next();
-		double rating = rs.getDouble("rating");
-		// check if there is exception when DB return null !!!
-		return rating;
+		String query = "SELECT AVG(r.rating) AS rating FROM pisi.ratings AS r WHERE r.product_id = ?";
+		ResultSet rs = null;
+		
+		try (PreparedStatement stmt = con.prepareStatement(query);){
+			stmt.setLong(1, productId);
+			rs = stmt.executeQuery();
+			rs.next();			
+			return rs.getDouble("rating");
+		} catch (SQLException e) {
+			throw e;
+		}finally {
+			if(rs != null){
+				rs.close();
+			}
+		}
+		
 	}
 
 }

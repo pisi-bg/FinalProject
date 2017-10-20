@@ -14,7 +14,7 @@
 	<jsp:include page="header.jsp"></jsp:include><br>
 	<br>
 
-	<c:if test="${ sessionScope.products != null }">
+	<c:if test="${ sessionScope.products != null } ">
 		<jsp:include page="categories.jsp"></jsp:include>
 	</c:if>
 	<br>
@@ -37,7 +37,9 @@
 
 		<form name="cart" action="" method="post">
 			<br> <br> Количество<input type="text" name="quantity">
-			<button type="submit" name="submitInCart">Добави в количка</button>
+			<button type="submit" name="submitInCart" >Добави в количка</button>
+			<button type="submit" name = "addInFavorite">Добави в любими</button>
+			<button type="submit" name = "addRaiting">Добави рейтинг</button>
 		</form>
 		<br>
 		<button type="button" name="back">Назад</button>

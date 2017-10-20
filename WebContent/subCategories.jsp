@@ -23,7 +23,7 @@
 	<c:if test="${ sessionScope.animal == 2 }">
 					<!-- FOOD  -->
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.id }&id=1&subId=6"><button>Canned Food</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=6"><button>Canned Food</button></a>
 		</c:if>
 		<c:if test="${ requestScope.id == 1 }">
 			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=15"><button>Granulated Food</button></a>

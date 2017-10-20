@@ -28,13 +28,24 @@ public class AnimalDao {
 	public List<String> getAnimal() throws SQLException{
 		List<String> animals = new ArrayList<>();
 		Connection con = DBManager.getInstance().getConnection();
+		String query = "SELECT animal_name AS name FROM pisi.animals ORDER BY animal_name ASC";
+		ResultSet rs = null;
 		
-		PreparedStatement stmt = con.prepareStatement("SELECT animal_name AS name FROM pisi.animals ORDER BY animal_name ASC");
-		ResultSet rs = stmt.executeQuery();
-		while(rs.next()){
-			animals.add(rs.getString("name"));
+		try (PreparedStatement stmt = con.prepareStatement(query)){
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				animals.add(rs.getString("name"));
+			}
+			return animals;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if(rs != null){
+				rs.close();
+			}
 		}
-		return animals;
+		
+		
 	}
 
 }
