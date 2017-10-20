@@ -15,5 +15,6 @@
 		<a href="products?animal=6"><button>Reptiles</button></a>
 		<a href="login.html" ><button>Login</button></a>
 		<a href="index.jsp" ><button>Home</button></a>
+		<a href="profile.jsp" ><button>Profile</button></a>
 	</body>
 </html>

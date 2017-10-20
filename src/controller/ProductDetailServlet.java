@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,25 +38,18 @@ public class ProductDetailServlet extends HttpServlet {
 			response.getWriter().append("sql" + e.getMessage());
 		}
 
-		// int animal = Integer.parseInt(request.getParameter("animal"));
-		//
-		// try {
-		// HashMap<String, ArrayList<Product>> products =
-		// ProductDao.getInstance().getProductsByAnimal(animal);
-		// request.getSession().setAttribute("products", products);
-		// request.getSession().setAttribute("animal", animal);
-		// } catch (SQLException e) {
-		// // TODO redirect to error page and re-throw e;
-		// e.printStackTrace();
-		// }
-		// request.getRequestDispatcher("products.jsp").forward(request,
-		// response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+		Object o = request.getSession().getAttribute("cart");
+		HashSet<Product> cart; // TODO override hash
+		if (o == null) {
+			cart = new HashSet<Product>();
+			request.getSession().setAttribute("cart", cart);
+		} else {
+			cart = (HashSet<Product>) o;
+		}
+
 	}
 
 }

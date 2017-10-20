@@ -32,16 +32,17 @@ public class OrderDao {
 	public ArrayList<Order> getOrdersForClient(long user_id) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
 		PreparedStatement stmt = con.prepareStatement(
-				"SELECT o.order_id AS order_id, o.dateTime_created AS dateTime , o.final_price AS price ,"
-						+ "p.product_id AS product_id, p.product_name AS name,"
-						+ "p.price AS price, p.discount AS discount, p.description AS description, c.category_name AS category,"
-						+ " an.animal_name AS animal, p.image_url AS image, b.brand_name AS brand"
-						+ "FROM pisi.orders AS o" + "JOIN pisi.orders_has_products AS op USING (order_id)"
-						+ "JOIN pisi.products AS p USING (product_id)"
-						+ "JOIN pisi.animals AS an ON (p.animal_id = an.animal_id)"
-						+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id)"
-						+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id)"
-						+ "JOIN pisi.brands AS b USING (brand_id) WHERE user_id = ? ORDER BY order_id");
+				" SELECT o.order_id AS order_id, o.dateTime_created AS dateTime , o.final_price AS price ,"
+						+ " p.product_id AS product_id, p.product_name AS name, "
+						+ " p.price AS price, p.discount AS discount, p.description AS description, c.category_name AS category, "
+						+ "  an.animal_name AS animal, p.image_url AS image, b.brand_name AS brand "
+						+ " FROM pisi.orders AS o" + " JOIN pisi.orders_has_products AS op ON o.order_id=op.product_id "
+						+ " JOIN pisi.products AS p USING (product_id)"
+						+ " JOIN pisi.animals AS an ON (p.animal_id = an.animal_id)"
+						+ " JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id)"
+						+ " JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id)"
+						+ " JOIN pisi.brands AS b USING (brand_id) WHERE user_id = ? ORDER BY order_id");
+
 		stmt.setLong(1, user_id);
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<Order> orders = new ArrayList<>();
@@ -64,7 +65,7 @@ public class OrderDao {
 						+ "JOIN pisi.animals AS an ON (p.animal_id = an.animal_id) "
 						+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
 						+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
-						+ "JOIN pisi.brands AS b USING (brand_id) WHERE op.order_id = 3 ORDER BY op.product_quantity");
+						+ "JOIN pisi.brands AS b USING (brand_id) WHERE op.order_id = ? ORDER BY op.product_quantity");
 		ps.setLong(1, orderId);
 		ResultSet rs = ps.executeQuery();
 		HashMap<Product, Integer> productsForOrder = new HashMap<Product, Integer>();
