@@ -47,11 +47,12 @@ public class User {
 	public boolean isAdmin() {
 		return isAdmin;
 	}
-
+	
 	//return user email
 	public String getEmail() {
 		return email;
 	}
+
 
 	//return user password
 	public String getPassword() {

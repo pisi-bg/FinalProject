@@ -17,6 +17,7 @@ public class DBManager {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
+			// TODO throw custom exception that leads to error page
 			System.out.println("Driver not found or failed to load. Check your libraries");
 		}
 
@@ -27,8 +28,8 @@ public class DBManager {
 		final String DB_PASS = "balonche1";
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
-					DB_PASS);
+			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,DB_PASS);
+			adminCon = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,DB_PASS);
 		} catch (SQLException e) {
 			// TODO handle exception
 			System.out.println("Ops" + e.getMessage());
@@ -39,7 +40,8 @@ public class DBManager {
 	// return only instance of this class
 	public static synchronized DBManager getInstance() {
 		if (instance == null) {
-			instance = new DBManager();
+			instance = new DBManager();			
+			
 		}
 		return instance;
 	}
