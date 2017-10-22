@@ -41,13 +41,25 @@ public class SearchProductService extends HttpServlet {
 			result = ProductDao.getInstance().searchProductByWord(arr);
 			JsonArray jarr = new JsonArray();
 			Gson gs = new Gson();
+			
+			
 			System.out.println("ehpooooo");
+			
+			
+			
 			System.out.println(result.size());
 			
 			for(Product p : result){			
 				jarr.add(gs.toJson(p));
-				System.out.println(gs.toJson(p));
+				
+				
+				System.out.println(gs.toJson(p).toString());
+				
+				
 			}
+			
+//			String s = new String(jarr.toString().getBytes(), "UTF-8");  =====  doesn't work!!!
+			
 			response.getWriter().append(jarr.toString());
 		} catch (SQLException e) {
 			System.out.println("error " +e.getMessage());

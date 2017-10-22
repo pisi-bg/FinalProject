@@ -56,10 +56,18 @@ public class DBManager {
 	}
 
 	// close connection to the database when server is shutdown
-	public void closeConnection() {
+	public void closeConnections() {
 		if (con != null) {
 			try {
 				con.close();
+			} catch (SQLException e) {
+				// TODO handle exception
+				e.printStackTrace();
+			}
+		}
+		if(adminCon != null){
+			try {
+				adminCon.close();
 			} catch (SQLException e) {
 				// TODO handle exception
 				e.printStackTrace();

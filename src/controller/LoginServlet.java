@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.dao.UserDao;
+import model.db.DBManager;
 import model.pojo.User;
 
 @WebServlet("/login")
@@ -49,6 +50,13 @@ public class LoginServlet extends HttpServlet {
 			response.getWriter().append("sql" + e.getMessage());
 		}
 
+	}
+	
+	// close connections to database
+	@Override
+	public void destroy() {
+		DBManager.getInstance().closeConnections(); 
+		super.destroy();
 	}
 
 }
