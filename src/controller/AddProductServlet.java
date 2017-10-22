@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -31,7 +29,7 @@ public class AddProductServlet extends HttpServlet {
 		
 		
 		request.setCharacterEncoding("UTF-8");
-		
+
 		
 		String name = request.getParameter("name");
 		String animal = request.getParameter("animal");

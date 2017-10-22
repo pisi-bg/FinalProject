@@ -298,7 +298,7 @@ public class ProductDao {
 		
 	}
 
-	public List<Product> searchProductByWord(String word) throws SQLException {
+	public List<Product> searchProductByWord(String[] word) throws SQLException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
@@ -306,19 +306,40 @@ public class ProductDao {
 				+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
-				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id) "
-				+ "WHERE p.product_name LIKE '%?%' OR p.description LIKE '%?%';";
+				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
+				+ "WHERE p.product_name LIKE ? OR p.description LIKE ? ";
+		
+		if(word.length != 1){
+			for (int i = 0; i < word.length-1; i++) {
+				query = query.concat(" or p.product_name LIKE ? OR p.description LIKE ?");
+			}
+		}
+		query = query.concat(";");
+		
 		ResultSet rs = null;
+		
+		
+		
+		System.out.println(query);
+		
+		
+		
+		
 		try (PreparedStatement stmt = con.prepareStatement(query);){
-			stmt.setString(1, word);
-			stmt.setString(2, word);
+			int control = 1;
+			for (int i = 0; i < word.length; i++) {
+				stmt.setString(control++, "%"+word[i]+"%");
+				stmt.setString(control++, "%"+word[i]+"%");
+			}			
 			rs = stmt.executeQuery();
+			
 			while (rs.next()) {
-				// check if there is a problem with returning a null from db for
-				// rating !!!
-				double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
-				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+				double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));				
+				Product p = new Product().setName(rs.getString("name")).setDescription(rs.getString("description"))
+						.setPrice(rs.getDouble("price")).setCategory(rs.getString("category")).setRating(rating)
+						.setImage(rs.getString("image"));
+				p.setId(rs.getLong("id"));				
+				products.add(p);
 			}
 			return products;
 		} catch (SQLException e) {
