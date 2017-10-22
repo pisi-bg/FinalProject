@@ -9,20 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.pojo.Cart;
 import model.pojo.Product;
 import model.pojo.User;
 
 /**
- * Servlet implementation class CartServlet
+ * Servlet implementation class CartAddServlet
  */
-@WebServlet("/cart")
-public class CartServlet extends HttpServlet {
+@WebServlet("/addInCart")
+public class CartAddProductServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		// check if logged
 		Object o = request.getSession().getAttribute("user");
 		if (o == null) {
 			request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -30,22 +28,22 @@ public class CartServlet extends HttpServlet {
 		}
 		User u = (User) o;
 
-		// retrieve all products that have been chosen for purchase
+		o = request.getSession().getAttribute("productCurrent");
+		Product product = (Product) o;
+
+		// check if session already stores a cart
 		Object oCart = request.getSession().getAttribute("cart");
 		HashMap<Product, Integer> cart = null;
-		if (oCart != null) {
+		if (oCart == null) {
+			cart = new HashMap<Product, Integer>();
+		} else {
 			cart = (HashMap<Product, Integer>) oCart;
 		}
 
-		request.setAttribute("priceForCart", Double.valueOf(Cart.calculatePriceForCart(cart)));
-		request.getRequestDispatcher("cart.jsp").forward(request, response);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// check if logged
-		// create an order with all chosen product in session
-		// save to db
+		// add product in map; if already exists adding 1 quanitity
+		cart.put(product, (cart.getOrDefault(product, 0) + 1));
+		request.getSession().setAttribute("cart", cart);
+		request.getRequestDispatcher("productdetail.jsp").forward(request, response);
 	}
 
 }

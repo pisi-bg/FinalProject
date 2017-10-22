@@ -29,38 +29,37 @@ public class UserDao {
 	// this method insert a product to user favorites
 	public boolean insertFavorite(User u, long product_id) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
-		String query = "INSERT INTO pisi.client_has_favorites (client_id, product_id) VALUES (?,?)";
+		String query = "INSERT INTO pisi.users_has_favorites (user_id, product_id) VALUES (?,?)";
 		int result = 0;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, u.getId());
 			stmt.setLong(2, product_id);
-			result = stmt.executeUpdate();			
+			result = stmt.executeUpdate();
 			// add product to the User POJO to be keep in session
-			u.addToFavorites(ProductDao.getInstance().getProduct(product_id));
-			
+			// u.addToFavorites(ProductDao.getInstance().getProduct(product_id));
+
 		} catch (SQLException e) {
 			throw e;
 		}
-		
+
 		return result == 1 ? true : false;
 
-		
 	}
 
 	// this method removes product from user favorites
 	public boolean removeFavorite(User u, long product_id) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
-		String query = "DELETE FROM pisi.client_has_favorites WHERE client_id = ? and product_id = ? ";
+		String query = "DELETE FROM pisi.users_has_favorites WHERE user_id = ? and product_id = ? ";
 		int result = 0;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query)) {
 			stmt.setLong(1, u.getId());
 			stmt.setLong(2, product_id);
 			result = stmt.executeUpdate();
 
 			// remove product from the User POJO to be keep in session
-			u.removeFromFavorites(ProductDao.getInstance().getProduct(product_id));			
+			// u.removeFromFavorites(ProductDao.getInstance().getProduct(product_id));
 		} catch (SQLException e) {
 			throw e;
 		}
@@ -72,8 +71,8 @@ public class UserDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "INSERT INTO pisi.users (first_name,last_name,email,password,gender, isAdmin) VALUES (?,?,?,?,?,?)";
 		ResultSet rs = null;
-		
-		try (PreparedStatement ps = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);){
+
+		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, u.getFirstName());
 			ps.setString(2, u.getLastName());
 			ps.setString(3, u.getEmail());
@@ -94,12 +93,11 @@ public class UserDao {
 			u.setId(rs.getLong(1));
 		} catch (SQLException e) {
 			throw e;
-		}finally {
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
 
 	}
 
@@ -120,7 +118,7 @@ public class UserDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "SELECT first_name as name FROM pisi.users WHERE email = ? AND password = ?";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, u.getEmail());
 			stmt.setString(2, u.getPassword());
@@ -128,11 +126,11 @@ public class UserDao {
 			return rs.next();
 		} catch (Exception e) {
 			throw e;
-		}finally {
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
-		}		
+		}
 	}
 
 	// return user by email
@@ -141,8 +139,8 @@ public class UserDao {
 		String query = "SELECT user_id as id, first_name , last_name, password, gender, isAdmin as admin"
 				+ " FROM pisi.users WHERE email = ?";
 		ResultSet rs = null;
-		
-		try (PreparedStatement stmt = con.prepareStatement(query);){
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, email);
 			rs = stmt.executeQuery();
 			rs.next();
@@ -153,11 +151,11 @@ public class UserDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
+
 	}
 
 	// update user data, no need to return User because we will already have it
@@ -165,7 +163,7 @@ public class UserDao {
 	public boolean updateUser(User u) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "UPDATE pisi.users SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ?, gender= ? WHERE users_id= ?;";
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, u.getFirstName());
 			stmt.setString(2, u.getLastName());
@@ -178,6 +176,6 @@ public class UserDao {
 		} catch (SQLException e) {
 			throw e;
 		}
-		
+
 	}
 }

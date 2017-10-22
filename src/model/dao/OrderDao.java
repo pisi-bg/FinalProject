@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import model.db.DBManager;
 import model.pojo.Order;
@@ -34,15 +33,15 @@ public class OrderDao {
 		String query = " SELECT o.order_id AS order_id, o.dateTime_created AS dateTime , o.final_price AS price ,"
 				+ " p.product_id AS product_id, p.product_name AS name, "
 				+ " p.price AS price, p.discount AS discount, p.description AS description, c.category_name AS category, "
-				+ "  an.animal_name AS animal, p.image_url AS image, b.brand_name AS brand "
-				+ " FROM pisi.orders AS o" + " JOIN pisi.orders_has_products AS op ON o.order_id=op.product_id "
+				+ "  an.animal_name AS animal, p.image_url AS image, b.brand_name AS brand " + " FROM pisi.orders AS o"
+				+ " JOIN pisi.orders_has_products AS op ON o.order_id=op.product_id "
 				+ " JOIN pisi.products AS p USING (product_id)"
 				+ " JOIN pisi.animals AS an ON (p.animal_id = an.animal_id)"
 				+ " JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id)"
 				+ " JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id)"
 				+ " JOIN pisi.brands AS b USING (brand_id) WHERE user_id = ? ORDER BY order_id";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, user_id);
 			rs = stmt.executeQuery();
@@ -56,14 +55,12 @@ public class OrderDao {
 			return orders;
 		} catch (Exception e) {
 			throw e;
-		}finally {
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
 
-		
 	}
 
 	public HashMap<Product, Integer> getProductsForOrder(long orderId) throws SQLException {
@@ -114,18 +111,25 @@ public class OrderDao {
 		return result == 1 ? true : false;
 	}
 
-	public double calculatePriceForOrder(HashMap<Product, Integer> products) {
-		double price = 0;
-		for (Entry<Product, Integer> entry : products.entrySet()) {
-			Product product = entry.getKey();
-			int quantity = (int) entry.getValue();
-			double productPrice = product.getPrice();
-			if (product.getDiscount() != 0) {
-				productPrice = ProductDao.getInstance().calcDiscountedPrice(product);
+	public ArrayList<String> getCitiesNames() throws SQLException {
+		ArrayList<String> cities = new ArrayList<>();
+		Connection con = DBManager.getInstance().getConnection();
+		String query = "SELECT city_name FROM pisi.cities;";
+		ResultSet rs = null;
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				cities.add(rs.getString("city_name"));
 			}
-			price += product.getPrice() * quantity;
+			return cities;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
 		}
-		return price;
 	}
 
 }

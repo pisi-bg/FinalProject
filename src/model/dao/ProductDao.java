@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import com.sun.swing.internal.plaf.synth.resources.synth;
+import java.util.Set;
 
 import model.db.DBManager;
 import model.pojo.Product;
@@ -42,7 +42,7 @@ public class ProductDao {
 				+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
 				+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) " + "WHERE p.animal_id = ?;";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setInt(1, animalId);
 			rs = stmt.executeQuery();
@@ -54,19 +54,18 @@ public class ProductDao {
 					products.put(category, new ArrayList<>());
 				}
 				double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
-				products.get(category).add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), category, rating, rs.getString("image")));
+				products.get(category).add(new Product(rs.getLong("id"), rs.getString("name"),
+						rs.getString("description"), rs.getDouble("price"), category, rating, rs.getString("image")));
 			}
 			return products;
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
-		
+
 	}
 
 	// this method returns all product for given animal id and given parent
@@ -83,8 +82,8 @@ public class ProductDao {
 				+ " JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
 				+ " WHERE c.parent_category_id = ? AND p.animal_id = ?;";
 		ResultSet rs = null;
-		
-		try (PreparedStatement stmt = con.prepareStatement(query);){
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, parentCategoryId);
 			stmt.setLong(2, animalId);
 			rs = stmt.executeQuery();
@@ -104,12 +103,11 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
-		
+
 	}
 
 	// this method returns list of product for given animal id and sub-category
@@ -125,7 +123,7 @@ public class ProductDao {
 				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id) "
 				+ "WHERE p.product_category_id = ? AND p.animal_id = ?;";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, categoryId);
 			stmt.setLong(2, animalId);
@@ -141,11 +139,11 @@ public class ProductDao {
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
+
 	}
 
 	// this method returns a product by its ID;
@@ -160,7 +158,7 @@ public class ProductDao {
 				+ " LEFT JOIN pisi.ratings as r ON (p.product_id = r. product_id) "
 				+ " JOIN pisi.animals as a ON(p.animal_id = a.animal_id) WHERE p.product_id = ?;";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, productId);
 			rs = stmt.executeQuery();
@@ -170,9 +168,10 @@ public class ProductDao {
 					rating = new Double(0);
 				}
 
-				return new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getInt("price"),
-						rs.getString("animal"), rs.getString("category"), rs.getString("brand"), rs.getString("brandlogo"),
-						rating, rs.getInt("unit"), rs.getString("image"), rs.getInt("discount"));
+				return new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+						rs.getInt("price"), rs.getString("animal"), rs.getString("category"), rs.getString("brand"),
+						rs.getString("brandlogo"), rating, rs.getInt("unit"), rs.getString("image"),
+						rs.getInt("discount"));
 			} else {
 				// TODO throw InvalidDataException
 				return null;
@@ -180,12 +179,11 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
-		
+
 	}
 
 	public List<Product> getProductsByBrand(int brand_id) throws SQLException {
@@ -198,7 +196,7 @@ public class ProductDao {
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
 				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id) " + "WHERE p.brand_id =?;";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setInt(1, brand_id);
 			rs = stmt.executeQuery();
@@ -213,26 +211,25 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
-		
+
 	}
 
 	public List<Product> getProductsInPromotion() throws SQLException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = DBManager.getInstance().getConnection();
-		String query ="SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
+		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
 				+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image "
 				+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
 				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id) " + "WHERE NOT (p.discount =0);";
 		ResultSet rs = null;
-		
-		try (PreparedStatement stmt = con.prepareStatement(query);){
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				// check if there is a problem with returning a null from db for
@@ -245,33 +242,30 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
-		
+
 	}
 
-	public List<Product> getFavorites(long userId) throws SQLException {
-		List<Product> tempList = new ArrayList<>();
+	public Set<Product> getFavorites(long userId) throws SQLException {
+		Set<Product> tempList = new HashSet<Product>();
 		Connection con = DBManager.getInstance().getConnection();
-		String query = "SELECT p.product_id as id , p.product_name as name, p.description as description, "
-				+ " c.category_name as category, a.animal_name as animal, p.instock_count as unit, p.price as price,"
-				+ " m.brand_name as brand, m.logo_image as brandImage, p.image_url as image, p.discount as discount  FROM pisi.products as p"
-				+ " JOIN pisi.product_categories AS c ON (p.product_category_id = c.product_category_id)"
-				+ " JOIN pisi.brands AS m ON (p.brand_id = m.brand_id)"
-				+ " JOIN pisi.animals as a ON(p.animal_id = a.animal_id)"
-				+ "	JOIN pisi.users_has_favorites AS cf ON(p.product_id = cf.product_id)"
-				+ " WHERE p.product_id = ?" + " GROUP BY p.product_id";
+		String query = " SELECT p.product_id as id , p.product_name as name, p.description as description,  "
+				+ "  c.category_name as category, a.animal_name as animal, p.instock_count as isStock, p.price as price, "
+				+ "  m.brand_name as brand, m.logo_image as brandImage, p.image_url as image, p.discount as discount  "
+				+ " FROM pisi.users_has_favorites AS cf " + " JOIN pisi.products as p ON(cf.product_id = p.product_id )"
+				+ " JOIN pisi.product_categories AS c ON (p.product_category_id = c.product_category_id) "
+				+ "	JOIN pisi.brands AS m ON (p.brand_id = m.brand_id)"
+				+ "	JOIN pisi.animals as a ON(p.animal_id = a.animal_id)" + "  WHERE cf.user_id = ? ;";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, userId);
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				// check if there is no rating for this product DB will return null;
 				double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
 
 				long id = rs.getLong("id");
@@ -282,20 +276,19 @@ public class ProductDao {
 				String category = rs.getString("category");
 				String brand = rs.getString("brand");
 				String brandImage = rs.getString("brandImage");
-				int isStock = rs.getInt("unit");
+				int isStock = rs.getInt("isStock");
 				String image = rs.getString("image");
 				int discount = rs.getInt("discount");
-				tempList.add(new Product(id, name, description, price, animal, category, brand, brandImage, rating, isStock,
-						image, discount));
+				tempList.add(new Product(id, name, description, price, animal, category, brand, brandImage, rating,
+						isStock, image, discount));
 			}
 			return tempList;
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			
+
 		}
-		
-		
+
 	}
 
 	public List<Product> searchProductByWord(String[] word) throws SQLException {
@@ -317,20 +310,15 @@ public class ProductDao {
 		query = query.concat(";");
 		
 		ResultSet rs = null;
-		
-		
-		
+
 		System.out.println(query);
-		
-		
-		
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);){
 			int control = 1;
 			for (int i = 0; i < word.length; i++) {
 				stmt.setString(control++, "%"+word[i]+"%");
 				stmt.setString(control++, "%"+word[i]+"%");
-			}			
+			}	
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
@@ -345,11 +333,11 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
+
 	}
 
 	public List<Product> getTopSoldProducts(int countLimit) throws SQLException {
@@ -357,15 +345,15 @@ public class ProductDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "SELECT  op.product_id as id, p.product_name as name , a.animal_name as animal, "
 				+ "c.category_name as category , p.price as price, p.description as description, "
-				+ "p.image_url as image, SUM(op.product_quantity) as countSold"
-				+ "FROM orders_has_products as op" + "JOIN pisi.products as p ON(op.product_id = p.product_id)"
+				+ "p.image_url as image, SUM(op.product_quantity) as countSold" + "FROM orders_has_products as op"
+				+ "JOIN pisi.products as p ON(op.product_id = p.product_id)"
 				+ "JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
 				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
 				+ "GROUP by op.product_id ORDER BY SUM(op.product_quantity) desc LIMIT ?;";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setInt(1, countLimit);
 			rs = stmt.executeQuery();
@@ -380,10 +368,10 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if( rs != null){
+			if (rs != null) {
 				rs.close();
 			}
-		}		
+		}
 	}
 
 	public List<Product> getTopSoldProductsByAnimal(int countLimit, int animalId) throws SQLException {
@@ -396,12 +384,11 @@ public class ProductDao {
 				+ "JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
-				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
-				+ "GROUP by op.product_id HAVING a.animal_id=?"
+				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)" + "GROUP by op.product_id HAVING a.animal_id=?"
 				+ "ORDER BY SUM(op.product_quantity)  desc  LIMIT ? ;";
 		ResultSet rs = null;
-		
-		try (PreparedStatement stmt = con.prepareStatement(query);){
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setInt(1, animalId);
 			stmt.setInt(1, countLimit);
 			rs = stmt.executeQuery();
@@ -416,16 +403,16 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if( rs != null){
+			if (rs != null) {
 				rs.close();
 			}
-		}		
+		}
 	}
 
-	public double calcDiscountedPrice(Product p) {
-		double newPrice = p.getPrice() * ((100 - p.getDiscount()) / 100.0);
-		return newPrice;
-	}
+	// public double calcDiscountedPrice(Product p) {
+	// double newPrice = p.getPrice() * ((100 - p.getDiscount()) / 100.0);
+	// return newPrice;
+	// }
 
 	// updating in stock quantity for product
 	public synchronized boolean removeQuantity(long productId, int quantityToRemove) throws SQLException {
@@ -435,7 +422,7 @@ public class ProductDao {
 		String updateQuery = "UPDATE pisi.products SET instock_count = ? WHERE product_id = ? ";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			// checks if there is enough quantity
 			stmt = con.prepareStatement(selectQuery);
@@ -443,7 +430,9 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			int currentInstockCount = rs.getInt("instock_count");
 			if (quantityToRemove >= currentInstockCount) {
-				stmt = con.prepareStatement(updateQuery);    // check later if there is problem with this !!!
+				stmt = con.prepareStatement(updateQuery); // check later if
+															// there is problem
+															// with this !!!
 				int newQuantity = currentInstockCount - quantityToRemove;
 				stmt.setLong(1, newQuantity);
 				stmt.setLong(2, productId);
@@ -459,13 +448,13 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if( stmt != null){
+			if (stmt != null) {
 				stmt.close();
 			}
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
-		}		
+		}
 	}
 
 	// ***ADMIN operations***
@@ -474,14 +463,14 @@ public class ProductDao {
 	public boolean setInPromotion(long productId, int percentDiscount) throws SQLException {
 		Connection con = DBManager.getInstance().getAdminCon();
 		String query = "UPDATE pisi.products SET discount = ? WHERE product_id = ? ";
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			stmt.setLong(1, percentDiscount);
 			stmt.setLong(2, productId);
 			return stmt.executeUpdate() == 1 ? true : false;
 		} catch (SQLException e) {
 			throw e;
-		}		
+		}
 	}
 
 	// adding quantity from admin
@@ -489,20 +478,19 @@ public class ProductDao {
 		Connection con = DBManager.getInstance().getAdminCon();
 		String query = "UPDATE pisi.products SET instock_count= instock_count + ? WHERE product_id=?;";
 		ResultSet rs = null;
-		
-		try (PreparedStatement stmt = con.prepareStatement(query);) {				
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setInt(1, quantity);
 			stmt.setLong(2, product_id);
-			return stmt.executeUpdate() == 1 ? true : false;			
+			return stmt.executeUpdate() == 1 ? true : false;
 		} catch (SQLException e) {
 			throw e;
-		} finally {			
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
-		}		
+		}
 	}
-	
 
 	// adding product from admin
 	public synchronized void addProduct(Product p) throws SQLException {
@@ -510,25 +498,25 @@ public class ProductDao {
 		String query = "INSERT INTO pisi.products (product_name, animal_id, product_category_id, price, description, brand_id, instock_count, discount, image_url)"
 				+ " VALUES (?,?,?,?,?,?,?,?,?)";
 		ResultSet rs = null;
-		
+
 		con.setAutoCommit(false);
-		try (PreparedStatement ps = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);){
+		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
 			int brandId = getBrandId(p.getBrand());
-			
+
 			// maybe not needed because we in-code all brand in our html
 			if (brandId == -1) {
 				brandId = insertBrand(p.getBrand(), p.getBrandImage());
 			}
-			
+
 			int animalId = retrieveAnimalId(p.getAnimal());
-			
+
 			int categoryId = retrieveCategoryId(p.getCategory());
-			
+
 			if (categoryId == -1 || animalId == -1 || brandId <= 0) {
 				// throws IvalidInputDataException
 			}
-			
+
 			ps.setString(1, p.getName());
 			ps.setInt(2, animalId);
 			ps.setInt(3, categoryId);
@@ -553,7 +541,7 @@ public class ProductDao {
 			throw e;
 		} finally {
 			con.setAutoCommit(true);
-			if (rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
@@ -566,28 +554,27 @@ public class ProductDao {
 		String queryTwo = "DELETE FROM pisi.ratings WHERE product_id=?;";
 		String queryThree = "DELETE FROM pisi.users_has_favorites WHERE product_id=?;";
 		String queryFour = "DELETE FROM pisi.products_has_animals WHERE product_id=?;";
-		
 
 		con.setAutoCommit(false);
-		
+
 		try (PreparedStatement psOne = con.prepareStatement(queryOne);
 				PreparedStatement psTwo = con.prepareStatement(queryTwo);
 				PreparedStatement psThree = con.prepareStatement(queryThree);
-				PreparedStatement psFour = con.prepareStatement(queryFour)){
-			
+				PreparedStatement psFour = con.prepareStatement(queryFour)) {
+
 			psOne.setLong(1, p.getId());
 			psOne.executeUpdate();
-						
+
 			psTwo.setLong(1, p.getId());
 			psTwo.executeUpdate();
-						
+
 			psThree.setLong(1, p.getId());
 			psThree.executeUpdate();
-			
+
 			psFour.setLong(1, p.getId());
 			psFour.executeUpdate();
-			
-			con.commit();			
+
+			con.commit();
 		} catch (SQLException e) {
 			try {
 				con.rollback();
@@ -597,7 +584,7 @@ public class ProductDao {
 			}
 			throw e;
 		} finally {
-			con.setAutoCommit(true);			
+			con.setAutoCommit(true);
 		}
 	}
 
@@ -606,21 +593,23 @@ public class ProductDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "SELECT brand_id as id FROM pisi.brands WHERE brand_name = ? ";
 		ResultSet rs = null;
-		
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
-			stmt.setString(1,  brandName);
+			stmt.setString(1, brandName);
 			rs = stmt.executeQuery();
-			if (rs.next()) {			
+			if (rs.next()) {
 				return rs.getInt("id");
-			} 
-			return -1;			
+			}
+			return -1;
 		} catch (SQLException e) {
 			throw e;
-		}finally {
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
-		}	
+
+		}
+
 	}
 
 	// inserts new brand, used when inserting new product if necessary
@@ -629,7 +618,7 @@ public class ProductDao {
 		String query = "INSERT INTO pisi.brands (brand_name, brand_image) VALUES (?,?)";
 		ResultSet rs = null;
 		try {
-			PreparedStatement ps = con.prepareStatement( query,Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, brandName);
 			ps.setString(2, brandImgUrl);
 			ps.executeUpdate();
@@ -639,11 +628,11 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
+
 	}
 
 	// this method returns the animal id
@@ -651,8 +640,9 @@ public class ProductDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "SELECT animal_id as id FROM pisi.animals WHERE animal_name = ?";
 		ResultSet rs = null;
-		try (PreparedStatement stmt = con.prepareStatement(query);){
-			stmt.setString(1,  animalName.toUpperCase());
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setString(1, animalName.toUpperCase());
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt("id");
@@ -661,12 +651,11 @@ public class ProductDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
-		
+
 	}
 
 	// this method returns the animal id
@@ -674,22 +663,22 @@ public class ProductDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "SELECT product_category_id as id FROM pisi.product_categories WHERE category_name = ?";
 		ResultSet rs = null;
-		
-		try(PreparedStatement stmt = con.prepareStatement(query);){
-			stmt.setString(1, categoryName.toUpperCase() );
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setString(1, categoryName.toUpperCase());
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt("id");
-			} 
+			}
 			return -1;
 		} catch (SQLException e) {
 			throw e;
-		}finally {
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
 		}
-		
+
 	}
 
 }

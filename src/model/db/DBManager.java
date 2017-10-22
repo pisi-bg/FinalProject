@@ -4,11 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
- 
 public class DBManager {
 
 	private static DBManager instance;
-	
+
 	private Connection con;
 	private Connection adminCon;
 
@@ -36,7 +35,7 @@ public class DBManager {
 		}
 
 	}
-	
+
 	// return only instance of this class
 	public static synchronized DBManager getInstance() {
 		if (instance == null) {
@@ -50,7 +49,7 @@ public class DBManager {
 	public Connection getConnection() {
 		return con;
 	}
-	
+
 	// return admin connection to the database
 	public Connection getAdminCon() {
 		return adminCon;

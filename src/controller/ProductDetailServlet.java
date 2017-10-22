@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.dao.ProductDao;
 import model.pojo.Product;
+import model.pojo.User;
 
 /***
  * Servlet implementation
@@ -25,18 +26,28 @@ public class ProductDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		// get product details
 		long productId = Long.parseLong(request.getParameter("productId"));
-
+		Product productCurrent = null;
 		try {
-			Product product = ProductDao.getInstance().getProduct(productId);
-			request.setAttribute("product", product);
-			request.getRequestDispatcher("productdetail.jsp").forward(request, response);
-
+			productCurrent = ProductDao.getInstance().getProduct(productId);
+			request.getSession().setAttribute("productCurrent", productCurrent);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			response.getWriter().append("sql" + e.getMessage());
 		}
+
+		// check if product is Favorite
+		Object o = request.getSession().getAttribute("user");
+		boolean isFavorite = false;
+		if (o != null) {
+			User u = (User) o;
+			isFavorite = u.hasInFavorites(productCurrent);
+		}
+		// request.setCharacterEncoding("UTF-8");
+		request.getSession().setAttribute("isFavorite", new Boolean(isFavorite));
+		request.getRequestDispatcher("productdetail.jsp").forward(request, response);
 
 	}
 
