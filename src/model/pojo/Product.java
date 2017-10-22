@@ -133,44 +133,54 @@ public class Product implements Serializable {
 	
 											// TODO VALIDATION !!!!!
 
-	public void setName(String name) {
+	public Product setName(String name) {
 		this.name = name;
+		return this;
 	}
 
-	public void setDescription(String description) {
+	public Product setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
-	public void setPrice(double price) {
+	public Product setPrice(double price) {
 		this.price = price;
+		return this;
 	}
 
-	public void setAnimal(String animal) {
+	public Product setAnimal(String animal) {
 		this.animal = animal;
+		return this;
 	}
 
-	public void setCategory(String category) {
+	public Product setCategory(String category) {
 		this.category = category;
+		return this;
 	}
 
-	public void setBrand(String brand) {
+	public Product setBrand(String brand) {
 		this.brand = brand;
+		return this;
 	}
 
-	public void setBrandImage(String brandImage) {
+	public Product setBrandImage(String brandImage) {
 		this.brandImage = brandImage;
+		return this;
 	}
 
-	public void setRating(double rating) {
+	public Product setRating(double rating) {
 		this.rating = rating;
+		return this;
 	}
 
-	public void setInStock(int isStock) {
+	public Product setInStock(int isStock) {
 		this.inStock = isStock;
+		return this;
 	}
 
-	public void setImage(String image) {
+	public Product setImage(String image) {
 		this.image = image;
+		return this;
 	}
 	
 

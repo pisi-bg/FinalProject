@@ -120,7 +120,6 @@ public class OrderDao {
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-
 				cities.add(rs.getString("city_name"));
 			}
 			return cities;
