@@ -120,7 +120,7 @@ public class OrderDao {
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				double rating = RatingDao.getInstance().getProductRating(rs.getLong("id"));
+
 				cities.add(rs.getString("city_name"));
 			}
 			return cities;

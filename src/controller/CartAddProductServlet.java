@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.pojo.Product;
-import model.pojo.User;
 
 /**
  * Servlet implementation class CartAddServlet
@@ -21,14 +20,8 @@ public class CartAddProductServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Object o = request.getSession().getAttribute("user");
-		if (o == null) {
-			request.getRequestDispatcher("login.jsp").forward(request, response);
-			return;
-		}
-		User u = (User) o;
 
-		o = request.getSession().getAttribute("productCurrent");
+		Object o = request.getSession().getAttribute("productCurrent");
 		Product product = (Product) o;
 
 		// check if session already stores a cart

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.dao.OrderDao;
+import model.pojo.User;
 
 /**
  * Servlet implementation class DeliverInfoServlet
@@ -21,6 +22,14 @@ public class DeliverInfoServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		// check if logged
+		Object oUser = request.getSession().getAttribute("user");
+		if (oUser == null) {
+			request.getRequestDispatcher("login.jsp").forward(request, response);
+			return;
+		}
+		User u = (User) oUser;
 		ArrayList<String> cities = null;
 		try {
 			cities = OrderDao.getInstance().getCitiesNames();

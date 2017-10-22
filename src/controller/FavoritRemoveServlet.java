@@ -14,14 +14,15 @@ import model.pojo.Product;
 import model.pojo.User;
 
 /**
- * Servlet implementation class FavoritServletAdd
+ * Servlet implementation class FavoritServletRemove
  */
-@WebServlet("/addFavorite")
-public class FavoritServletAdd extends HttpServlet {
+@WebServlet("/removeFavorit")
+public class FavoritRemoveServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		Object o = request.getSession().getAttribute("user");
 		if (o == null) {
 			request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -32,16 +33,14 @@ public class FavoritServletAdd extends HttpServlet {
 		o = request.getSession().getAttribute("productCurrent");
 		if (o != null) {
 			Product p = (Product) o;
-			boolean inserted = false;
+			boolean removed = false;
 			try {
-				inserted = UserDao.getInstance().insertFavorite(u, p.getId());
-				if (inserted) {
-					u.addToFavorites(p);
-					request.getSession().setAttribute("isFavorite", true);
-
+				removed = UserDao.getInstance().removeFavorite(u, p.getId());
+				if (removed) {
+					u.removeFromFavorites(p);
+					request.getSession().setAttribute("isFavorite", false);
 				} else {
 					// TODO throw couldn't do that
-					System.out.println("NOT inserted");
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -52,5 +51,4 @@ public class FavoritServletAdd extends HttpServlet {
 
 		request.getRequestDispatcher("productdetail.jsp").forward(request, response);
 	}
-
 }
