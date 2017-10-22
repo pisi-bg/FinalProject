@@ -8,10 +8,10 @@
 </head>
 <body>
 
-	<!--c:if test="${ sessionScope.user == null }"-->
-	<!--c:redirect url="login.html"-->
-	<!--/c:redirect-->
-	<!--/c:if-->
+	<c:if test="${ sessionScope.user == null }">
+		<c:redirect url="login.jsp">
+		</c:redirect>
+	</c:if>
 
 	<jsp:include page="header.jsp"></jsp:include>
 

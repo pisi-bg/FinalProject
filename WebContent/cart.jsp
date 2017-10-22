@@ -10,41 +10,156 @@
 </head>
 <body>
 
+
+	<c:if test="${ sessionScope.user == null }">
+		<c:redirect url="login.jsp">
+		</c:redirect>
+	</c:if>
+
 	<jsp:include page="header.jsp"></jsp:include><br>
 	<br>
 
+	<h1 id="cart_title" class="page-heading">Количка за пазаруване</h1>
+
+	<c:if test="${ sessionScope.cart == null }">
+		<h4>Няма добавени продукти в количката</h4>
+	</c:if>
+
+
+
 	<c:if test="${ sessionScope.cart != null }">
-		<c:forEach items="${ sessionScope.cart }" var="cart">
-			<h4>${ order.datetime }</h4>
-			<table border="1">
-				<c:forEach items="${ order.products }" var="productEntry">
+		<table id="cart_summary"
+			class="table table-bordered stock-management-on">
+			<thead class="">
+				<tr>
+					<th class="cart_product first_item">Снимка</th>
+					<th class="cart_description item">Продукт</th>
+					<th class="cart_unit item text-right">Цена</th>
+					<th class="cart_quantity item text-center">Количество</th>
+					<th class="cart_delete last_item">&nbsp;</th>
+					<th class="cart_total item text-right">Общо</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<c:forEach items="${ sessionScope.cart }" var="productEntry">
 					<c:set var="product" value="${productEntry.key}" />
 					<tr>
-						<td>Снимка</td>
-						<td>Име</td>
-						<td>Описание</td>
-						<td>Марка</td>
-						<td>Цена</td>
-						<td>Количество</td>
-						<td>Обща цена за продукта</td>
-						<td>Намаление</td>
-					</tr>
-					<tr>
-						<td>${product.image }</td>
-						<td>${product.name }</td>
-						<td>${product.description }</td>
-						<td>${product.brand }</td>
-						<td>${product.price }</td>
-						<td>${productEntry.value }</td>
-						<td>смятай</td>
-						<td>${product.discount }</td>
+						<td class="cart_product"><a
+							href="productdetail?productId=${product.id}"><img
+								src="${product.image }" alt="${product.description }" width="98"
+								height="98"></a></td>
+						<td class="cart_description"><p class="product-name">
+								<a href="productdetail?productId=${product.id}">${product.description }</a>
+						<td class="cart_unit"><ul>
+								<li class="price regular-price"><span> <fmt:formatNumber
+											type="number" pattern="#####.##" value="${ product.price }" />лв.
+								</span></li>
+								<c:if
+									test="${ product.discount != null && product.discount != 0 }">
+									<li class="price special-price"><span>нова цена <fmt:formatNumber
+												type="number" pattern="#####.##"
+												value="${product.calcDiscountedPrice() }" />лв.
+									</span></li>
+								</c:if>
+							</ul></td>
+						<td>
+							<form action="updateCart" method="post"
+								onsubmit="<c:set var="productCurrent" value="${product }" /> "
+								onclick="setCurrentProduct()">
+								<script>
+										function setCurrentProduct() {
+											<c:set var="productCurrent" value="${product }" />
+										}
+								</script>
+								<input type="text"
+									style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
+									name="count" size="2" value="${productEntry.value}"
+									maxlength="2">
+
+								<button type="submit" name="productCurrent" value="${product }"
+									onclick="setCurrentProduct()">обнови</button>
+								<script>
+										function setCurrentProduct() {
+											<c:set var="productCurrent" value="${product }"/>
+										}
+								</script>
+
+								<!-- input type="image" name=""
+							src="http://www.petszona.com/image/update.png" alt="Update"
+							title="Update"-->
+							</form>
+						</td>
+						<td><form action="removeFromCart" method="post">
+								<button type="submit" name="productCurrent" value="${product }">изтрий</button>
+							</form></td>
+						<td><c:if test="${ product.discount == null}">
+								<fmt:formatNumber type="number" pattern="#####.##"
+									value="${ product.price * productEntry.value }" />лв.									
+							</c:if> <c:if
+								test="${ product.discount != null && product.discount != 0 }">
+								<fmt:formatNumber type="number" pattern="#####.##"
+									value="${ product.calcDiscountedPrice()  *  productEntry.value }" />лв.									 
+							</c:if></td>
 					</tr>
 				</c:forEach>
-				<h4>${ order.finalPrice }</h4>
-			</table>
-			<hr>
-		</c:forEach>
+			</tbody>
+			<tfoot class="">
+				<tr class="cart_total_price">
+					<td rowspan="4" colspan="2"
+						style="border: 1px solid #ccc; color: #000; background-color: #FFF">
+						<h3 style="text-transform: uppercase">Заплащане</h3> <br>
+						Заплащането се извършва с наложен платеж при получаване на
+						доставката <br>
+					</td>
+				</tr>
+				<tr class="cart_total_price">
+					<td colspan="3" class="total_price_container text-right"><span>Обща
+							цена:</span></td> ${requestScope.priceForCart}
+					<td colspan="3" class="price" id="total_price_container"><span
+						id="total_price" style="font-size: 24px;">${ requestScope.priceForCart }
+							лв.</span>${requestScope.priceForCart}</td>
+				</tr>
+			</tfoot>
+
+		</table>
+		<hr>
+		<p class="cart_navigation  clearfix inner-top" style="float: right">
+		<form action="deliveryInfo" method="get">
+			<button type="submit" name="submit_fast_registration">
+				Потвърди поръчката</button>
+		</form>
+		</p>
 	</c:if>
-	
+	<!-- end order-detail-content -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>

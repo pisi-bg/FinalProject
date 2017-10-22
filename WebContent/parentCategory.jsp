@@ -17,7 +17,7 @@
 		<table border="1">
 			<c:forEach items="${ products.value }" var="pro">
 				<tr>		
-					<td> ${ pro.name }</td>		
+					<td><a href="productdetail?productId=${pro.id}">${pro.name }</a></td>		
 					<td> ${ pro.description }</td>
 					<td> ${ pro.price }</td>
 					<c:if test="${pro.rating != 0 }">

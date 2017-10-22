@@ -4,11 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
- 
 public class DBManager {
 
 	private static DBManager instance;
-	
+
 	private Connection con;
 	private Connection adminCon;
 
@@ -24,7 +23,7 @@ public class DBManager {
 		final String DB_PORT = "3306";
 		final String DB_DBNAME = "pisi";
 		final String DB_USER = "root";
-		final String DB_PASS = "balonche1";
+		final String DB_PASS = "root";
 
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
@@ -35,7 +34,7 @@ public class DBManager {
 		}
 
 	}
-	
+
 	// return only instance of this class
 	public static synchronized DBManager getInstance() {
 		if (instance == null) {
@@ -48,7 +47,7 @@ public class DBManager {
 	public Connection getConnection() {
 		return con;
 	}
-	
+
 	// return admin connection to the database
 	public Connection getAdminCon() {
 		return adminCon;

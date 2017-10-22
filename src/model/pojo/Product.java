@@ -2,7 +2,7 @@ package model.pojo;
 
 import java.io.Serializable;
 
-public class Product implements Serializable{
+public class Product implements Serializable {
 
 	private long id;
 	private String name;
@@ -59,6 +59,22 @@ public class Product implements Serializable{
 	@Override
 	public String toString() {
 		return this.name + " " + this.description + " " + this.animal + " " + this.category;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) this.id;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return this.id == ((Product) o).getId();
+	}
+
+	public double calcDiscountedPrice() {
+		double newPrice = price * ((100 - discount) / 100.0);
+
+		return newPrice;
 	}
 
 	// getters
