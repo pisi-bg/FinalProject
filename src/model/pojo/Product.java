@@ -13,15 +13,18 @@ public class Product implements Serializable {
 	private String brand;
 	private String brandImage;
 	private double rating;
-	private int isStock;
+	private int inStock;
 	private String image;
 	private int discount; // in percent
 
+	public Product(){		
+	}
+	
 	public Product(long id, String name, String description, double price, String animal, String category, String brand,
 			String brandImage, double rating, int isStock, String image, int discount) {
 		this(id, name, description, price, discount, animal, category, image, rating, brand);
 		this.brandImage = brandImage;
-		this.isStock = isStock;
+		this.inStock = isStock;
 	}
 
 	// constructor to retrieve short info from DB for orders history
@@ -114,8 +117,8 @@ public class Product implements Serializable {
 		return rating;
 	}
 
-	public int getIsStock() {
-		return isStock;
+	public int getInStock() {
+		return inStock;
 	}
 
 	public String getImage() {
@@ -125,5 +128,50 @@ public class Product implements Serializable {
 	public int getDiscount() {
 		return discount;
 	}
+	
+	//   ** SETTERS ****
+	
+											// TODO VALIDATION !!!!!
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public void setAnimal(String animal) {
+		this.animal = animal;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public void setBrandImage(String brandImage) {
+		this.brandImage = brandImage;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+
+	public void setInStock(int isStock) {
+		this.inStock = isStock;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
 
 }

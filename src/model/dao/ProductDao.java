@@ -487,10 +487,14 @@ public class ProductDao {
 		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
 			int brandId = getBrandId(p.getBrand());
+
+			// maybe not needed because we in-code all brand in our html
 			if (brandId == -1) {
 				brandId = insertBrand(p.getBrand(), p.getBrandImage());
 			}
+
 			int animalId = retrieveAnimalId(p.getAnimal());
+
 			int categoryId = retrieveCategoryId(p.getCategory());
 
 			if (categoryId == -1 || animalId == -1 || brandId <= 0) {
@@ -503,7 +507,7 @@ public class ProductDao {
 			ps.setDouble(4, p.getPrice());
 			ps.setString(5, p.getDescription());
 			ps.setInt(6, brandId);
-			ps.setInt(7, p.getIsStock());
+			ps.setInt(7, p.getInStock());
 			ps.setInt(8, p.getDiscount());
 			ps.setString(9, p.getImage());
 			ps.executeUpdate();
@@ -571,7 +575,7 @@ public class ProductDao {
 	// this method returns the id of brand if it exists in the database
 	public int getBrandId(String brandName) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
-		String query = "SELECT brand_id as id FROM pisi.brands WHERE brand_name = ?";
+		String query = "SELECT brand_id as id FROM pisi.brands WHERE brand_name = ? ";
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
@@ -587,6 +591,7 @@ public class ProductDao {
 			if (rs != null) {
 				rs.close();
 			}
+
 		}
 
 	}
@@ -619,6 +624,7 @@ public class ProductDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = "SELECT animal_id as id FROM pisi.animals WHERE animal_name = ?";
 		ResultSet rs = null;
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, animalName.toUpperCase());
 			rs = stmt.executeQuery();
