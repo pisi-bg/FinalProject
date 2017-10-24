@@ -12,7 +12,7 @@
 				<!-- AQUARISTICS -->
 	<c:if test="${ sessionScope.animal == 1 }">
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=1"><button>E.G. Food</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=1" style="text-decoration: none"><button>E.G. Food</button></a>
 		</c:if>
 		
 		<!-- here we place other sub categories like above when we fill DB with testing info and subId="sub category id in the db" -->		
@@ -23,29 +23,29 @@
 	<c:if test="${ sessionScope.animal == 2 }">
 					<!-- FOOD  -->
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=6"><button>Canned Food</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=6" style="text-decoration: none"><button>Canned Food</button></a>
 		</c:if>
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=15"><button>Granulated Food</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=15" style="text-decoration: none"><button>Granulated Food</button></a>
 		</c:if>
 				<!-- ACCESSOARIES -->
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=8"><button>Transport</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=8" style="text-decoration: none"><button>Transport</button></a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=11"><button>Straps</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=11" style="text-decoration: none"> <button>Straps</button></a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=12"><button>Clothes</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=12" style="text-decoration: none"><button>Clothes</button></a>
 		</c:if>
 					<!-- COSMETICS -->
 		<c:if test="${ requestScope.id == 3 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=3&subId=7"><button>Brushes</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=3&subId=7" style="text-decoration: none"><button>Brushes</button></a>
 		</c:if>			<!-- To be listed more -->
 				
 				<!-- HYGIENE -->
 		<c:if test="${ requestScope.id == 4 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=4&subId=56"><button>Toilets</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=4&subId=56" style="text-decoration: none"><button>Toilets</button></a>
 		</c:if>						<!-- Toilets is just an example we don't have it in the database -->
 		
 		
@@ -56,30 +56,30 @@
 	<c:if test="${ sessionScope.animal == 3 }">
 					<!-- FOOD  -->
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=6"><button>Canned Food</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=6" style="text-decoration: none"><button>Canned Food</button></a>
 			
 		</c:if>
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=15"><button>Granulated Food</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=15" style="text-decoration: none"><button>Granulated Food</button></a>
 		</c:if>
 				<!-- ACCESSOARIES -->
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=8"><button>Transport</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=8" style="text-decoration: none"><button>Transport</button></a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=11"><button>Straps</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=11" style="text-decoration: none"><button>Straps</button></a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=12"><button>Clothes</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=12" style="text-decoration: none"><button>Clothes</button></a>
 		</c:if>
 					<!-- COSMETICS -->
 		<c:if test="${ requestScope.id == 3 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=3&subId=7"><button>Brushes</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=3&subId=7" style="text-decoration: none"><button>Brushes</button></a>
 		</c:if>			<!-- To be listed more -->
 				
 				<!-- HYGIENE -->
 		<c:if test="${ sessionScope.id == 4 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=4&subId=56"><button>Toilets</button></a>
+			<a href="subcategory?animal=${ sessionScope.animal }&id=4&subId=56" ><button>Toilets</button></a>
 		</c:if>						<!-- Toilets is just an example we don't have it in the database -->
 		
 	</c:if>

@@ -11,19 +11,20 @@
 	
 	
 	<c:if test="${ sessionScope.animal != null }">
-		<a href="category?animal=${sessionScope.animal }&id=1"><button>Food</button></a>
-		<a href="category?animal=${sessionScope.animal }&id=2"><button>Accessories</button></a>
+	
+		<a href="category?animal=${sessionScope.animal }&id=1" style="text-decoration: none">ХРАНА</a>  &nbsp;
+		<a href="category?animal=${sessionScope.animal }&id=2" style="text-decoration: none">АКСЕСОАРИ</a>  &nbsp;
 		
 		<c:if test="${ sessionScope.animal == 2 || sessionScope.animal == 3 }">
-			<a href="category?animal=${sessionScope.animal }&id=3"><button>Cosmetics</button></a>
+			<a href="category?animal=${sessionScope.animal }&id=3" style="text-decoration: none">КОЗМЕТИКА</a>  &nbsp;
 		</c:if>
 		
 		<c:if test="${ sessionScope.animal == 1 || sessionScope.animal == 2 || sessionScope.animal == 3 }">
-			<a href="category?animal=${sessionScope.animal }&id=4"><button>Hygiene</button></a>
+			<a href="category?animal=${sessionScope.animal }&id=4" style="text-decoration: none">ХИГИЕНА</a>  &nbsp;
 		</c:if>
 		
 		<c:if test="${ sessionScope.animal == 1 || sessionScope.animal == 5 || sessionScope.animal == 6 }">
-			<a href="category?animal=${sessionScope.animal }&id=5"><button>Aquariums And Cages</button></a>
+			<a href="category?animal=${sessionScope.animal }&id=5" style="text-decoration: none">АКВАРИУМИ И КЛЕТКИ</a>  &nbsp;
 		</c:if><br><br>
 		
 		<jsp:include page="subCategories.jsp"></jsp:include>

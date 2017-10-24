@@ -32,7 +32,7 @@ public class OrderDao {
 		Connection con = DBManager.getInstance().getConnection();
 		String query = " SELECT o.order_id AS order_id, o.dateTime_created AS dateTime , o.final_price AS price ,"
 				+ " p.product_id AS product_id, p.product_name AS name, "
-				+ " p.price AS price, p.discount AS discount, p.description AS description, c.category_name AS category, "
+				+ " p.price AS price, p.description AS description, c.category_name AS category, "
 				+ "  an.animal_name AS animal, p.image_url AS image, b.brand_name AS brand " + " FROM pisi.orders AS o"
 				+ " JOIN pisi.orders_has_products AS op ON o.order_id=op.product_id "
 				+ " JOIN pisi.products AS p USING (product_id)"
@@ -50,7 +50,7 @@ public class OrderDao {
 				HashMap<Product, Integer> products = OrderDao.getInstance().getProductsForOrder(rs.getLong("order_id"));
 				orders.add(new Order(rs.getLong("order_id"), user_id,
 						DateTimeJavaSqlConvertor.sqlToLocalDateTime(rs.getString("dateTime")),
-						rs.getBigDecimal("discount").doubleValue(), rs.getBigDecimal("price").doubleValue(), products));
+						rs.getBigDecimal("price").doubleValue(), products));
 			}
 			return orders;
 		} catch (Exception e) {
@@ -98,7 +98,7 @@ public class OrderDao {
 	public boolean insertOrderForUser(Order order) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
 		PreparedStatement ps = con.prepareStatement(
-				"INSERT INTO pisi.orders ( user_id, dateTime_created , final_price ) VALUES (?,?,?)",
+				"INSERT INTO pisi.orders ( user_id, dateTime_created , final_price, deliver_info_id ) VALUES (?,?,?,?)",
 				Statement.RETURN_GENERATED_KEYS);
 		ps.setLong(1, order.getUser().getId());
 		ps.setString(2, DateTimeJavaSqlConvertor.localDateTimeToSql(order.getDateTime()));
@@ -109,6 +109,41 @@ public class OrderDao {
 		order.setId(rs.getLong(1));
 		// TODO add products from order in DB; think about get delivery_info_id
 		return result == 1 ? true : false;
+
+		Connection con = DBManager.getInstance().getConnection();
+		String queryOrders = "INSERT INTO pisi.orders ( user_id, dateTime_created , final_price, deliver_info_id ) VALUES (?,?,?,?)"
+				+ " VALUES (?,?,?,?)";
+		ResultSet rs = null;
+
+		con.setAutoCommit(false);
+		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
+
+			ps.setLong(1, order.getUser().getId());
+			ps.setString(2, DateTimeJavaSqlConvertor.localDateTimeToSql(order.getDateTime()));
+			ps.setDouble(3, order.getFinalPrice());
+			ps.setInt(4, (int) order.getDeliveryInfoId());
+			// TODO ne e dobre gornoto cast-vane
+
+			ps.executeUpdate();
+			con.commit();
+			rs = ps.getGeneratedKeys();
+			rs.next();
+			p.setId(rs.getLong(1));
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO error page....
+				e1.printStackTrace();
+			}
+			throw e;
+		} finally {
+			con.setAutoCommit(true);
+			if (rs != null) {
+				rs.close();
+			}
+		}
+
 	}
 
 	public ArrayList<String> getCitiesNames() throws SQLException {

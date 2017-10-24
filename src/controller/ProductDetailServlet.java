@@ -53,7 +53,7 @@ public class ProductDetailServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		Object o = request.getSession().getAttribute("cart");
-		HashSet<Product> cart; // TODO override hash
+		HashSet<Product> cart;
 		if (o == null) {
 			cart = new HashSet<Product>();
 			request.getSession().setAttribute("cart", cart);

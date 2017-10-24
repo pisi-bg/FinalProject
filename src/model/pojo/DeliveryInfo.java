@@ -14,7 +14,6 @@ public class DeliveryInfo {
 	// constructor to send info in DB
 	public DeliveryInfo(String address, int zipCode, String city, String recieverFirstName, String recieverLastName,
 			String recieverPhone, String notes) {
-		super();
 		this.address = address;
 		this.zipCode = zipCode;
 		this.city = city;
@@ -27,7 +26,6 @@ public class DeliveryInfo {
 	// constructor to retrieve info from DB
 	public DeliveryInfo(long deliveryInfoId, String address, int zipCode, String city, String recieverFirstName,
 			String recieverLastName, String recieverPhone, String notes) {
-		super();
 		this.deliveryInfoId = deliveryInfoId;
 		this.address = address;
 		this.zipCode = zipCode;

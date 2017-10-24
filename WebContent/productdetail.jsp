@@ -41,6 +41,7 @@
 				test="${( (sessionScope.user == null) || (sessionScope.user != null && (!sessionScope.isFavorite)))}">
 				<form action="addFavorite" method="post">
 					<button type="submit" name='addFavorit'>Добави в любими</button>
+					<input type="hidden" value="${product.id }" name="productCurrent">
 				</form>
 			</c:if>
 			

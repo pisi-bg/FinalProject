@@ -41,7 +41,7 @@ public class CartServlet extends HttpServlet {
 		if (oCart != null) {
 			cart = (HashMap<Product, Integer>) oCart;
 			double priceForCart = Cart.getInstance().calculatePriceForCart(cart);
-			request.setAttribute("priceForCart", priceForCart);
+			request.getSession().setAttribute("priceForCart", priceForCart);
 		}
 		request.getRequestDispatcher("cart.jsp").forward(request, response);
 	}

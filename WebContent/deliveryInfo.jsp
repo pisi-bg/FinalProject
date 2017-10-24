@@ -8,10 +8,14 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+	<jsp:include page="header.jsp"></jsp:include><br>
+	<br>
+	
 	<h3 align="center">Информация за доставка</h3>
 	<br>
 	<div align="center">
-		<form action="createOrder" method="POST" style="text-align: center;">
+		<form action="createOrder" method="POST" style="text-align: center;" enctype="multipart/form-data">
 			<h3 align="center">Получател</h3>
 			<!--  form action="getNamesFromUser" method="POST"
 				style="text-align: center;">
@@ -24,14 +28,11 @@
 			Телефон<input type="text" name="phone" required><br>
 
 			<h3 align="center">Адрес</h3>
-			Град<select  name='city'>
+			Град<select name='city'>
 				<c:forEach items="${requestScope.cities}" var="city">
 					<option value="${city}">${city}</option>
 				</c:forEach>
-			</select> <br>
-	
-			
-			 ПК<input type="text" name="zip" required><br>
+			</select> <br> ПК<input type="text" name="zip" required><br>
 			Адрес<input type="text" name="address" required><br>
 			Бележка <input type="text" name="note"> <br> <input
 				type="submit" value="Потвърди">

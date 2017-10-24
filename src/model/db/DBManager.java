@@ -24,11 +24,13 @@ public class DBManager {
 		final String DB_PORT = "3306";
 		final String DB_DBNAME = "pisi";
 		final String DB_USER = "root";
-		final String DB_PASS = "balonche1";
+		final String DB_PASS = "root";
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,DB_PASS);
-			adminCon = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,DB_PASS);
+			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
+					DB_PASS);
+			adminCon = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
+					DB_PASS);
 		} catch (SQLException e) {
 			// TODO handle exception
 			System.out.println("Ops" + e.getMessage());
@@ -39,8 +41,8 @@ public class DBManager {
 	// return only instance of this class
 	public static synchronized DBManager getInstance() {
 		if (instance == null) {
-			instance = new DBManager();			
-			
+			instance = new DBManager();
+
 		}
 		return instance;
 	}
@@ -65,7 +67,7 @@ public class DBManager {
 				e.printStackTrace();
 			}
 		}
-		if(adminCon != null){
+		if (adminCon != null) {
 			try {
 				adminCon.close();
 			} catch (SQLException e) {

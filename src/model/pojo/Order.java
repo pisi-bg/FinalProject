@@ -11,21 +11,24 @@ public class Order {
 	private LocalDateTime dateTime;
 	private double discount; // by default 0
 	private double finalPrice;
+	private long deliveryInfoId;
+	private DeliveryInfo deliveryInfo;
 
 	private HashMap<Product, Integer> products;
 
 	// constructor to send info in DB
-	public Order(User user, LocalDateTime datetime, double discount, double finalPrice, int deliveryInfoId,
+	public Order(User user, LocalDateTime datetime, double finalPrice, DeliveryInfo deliveryInfo,
 			HashMap<Product, Integer> products) {
 		this.user = user;
 		this.dateTime = datetime;
 		this.discount = discount;
 		this.finalPrice = finalPrice;
 		this.products = products;
+		this.deliveryInfoId = deliveryInfoId;
 	}
 
 	// constructor to retrieve info from DB
-	public Order(long orderId, long user_id, LocalDateTime datetime, double discount, double finalPrice,
+	public Order(long orderId, long user_id, LocalDateTime datetime, double finalPrice,
 			HashMap<Product, Integer> products) {
 		this.orderId = orderId;
 		this.user = user;
@@ -33,6 +36,7 @@ public class Order {
 		this.discount = discount;
 		this.finalPrice = finalPrice;
 		this.products = products;
+		this.deliveryInfoId = deliveryInfoId;
 	}
 
 	public void setId(long orderId) {
@@ -55,6 +59,14 @@ public class Order {
 
 	public double getFinalPrice() {
 		return finalPrice;
+	}
+
+	public long getOrderId() {
+		return orderId;
+	}
+
+	public long getDeliveryInfoId() {
+		return deliveryInfoId;
 	}
 
 	public HashMap<Product, Integer> getProducts() {
