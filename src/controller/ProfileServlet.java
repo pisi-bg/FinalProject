@@ -2,7 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,10 +33,10 @@ public class ProfileServlet extends HttpServlet {
 		User u = (User) oUser;
 
 		// show all orders for the logged
-		ArrayList<Order> orders;
+		TreeSet<Order> orders;
 		try {
 			// orders = OrderDao.getInstance().getOrdersForClient(u.getId());
-			orders = OrderDao.getInstance().getOrdersForClient(userId);
+			orders = OrderDao.getInstance().getOrdersForUser(userId);
 			request.getSession().setAttribute("orders", orders);
 			request.getRequestDispatcher("profile.jsp").forward(request, response);
 		} catch (SQLException e) {

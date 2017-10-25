@@ -37,9 +37,6 @@ public class CartRemoveProductServlet extends HttpServlet {
 			response.getWriter().append("sql" + e.getMessage());
 		}
 		request.getRequestDispatcher("cart").forward(request, response);
-		Product product = (Product) request.getSession().getAttribute("productCurrent");
-		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) request.getSession().getAttribute("cart");
-		request.getRequestDispatcher("cart").forward(request, response);
 	}
 
 }

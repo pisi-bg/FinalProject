@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import model.db.DBManager;
 import model.pojo.DeliveryInfo;
@@ -47,7 +48,51 @@ public class DeliveryInfoDao {
 		} finally {
 			rs.close();
 		}
+	}
 
+	public ArrayList<DeliveryInfo> getListDeliveryInfosForUser(long userId) throws SQLException {
+		Connection con = DBManager.getInstance().getConnection();
+		String query = "SELECT delivery_info_id FROM pisi.orders WHERE user_id =?;";
+		ResultSet rs = null;
+		ArrayList<DeliveryInfo> listDeliveries = null;
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setLong(1, userId);
+			rs = stmt.executeQuery();
+			listDeliveries = new ArrayList<>();
+			while (rs.next()) {
+				listDeliveries.add(DeliveryInfoDao.getInstance().getDeliveryInfo(rs.getInt("delivery_info_id")));
+			}
+			return listDeliveries;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+	}
+
+	public DeliveryInfo getDeliveryInfo(long deliveryInfoId) throws SQLException {
+
+		Connection con = DBManager.getInstance().getConnection();
+		String query = "SELECT *  FROM pisi.deliveries_info_id JOIN pisi.cities AS c USING (city_id) WHERE delivery_info_id=?;";
+		ResultSet rs = null;
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setLong(1, deliveryInfoId);
+			rs = stmt.executeQuery();
+			rs.next();
+			DeliveryInfo delInfo = new DeliveryInfo(deliveryInfoId, rs.getString("address"), rs.getInt("zip_code"),
+					rs.getString("city_name"), rs.getString("reciever_first_name"), rs.getString("reciever_last_name"),
+					rs.getString("reciever_phone"), rs.getString("notes"));
+			return delInfo;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
 	}
 
 	public int retrieveCityId(String cityName) throws SQLException {

@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"-->
+<!DOCTYPE html SYSTEM "about:legacy-compat">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -54,10 +55,11 @@
 	<div class="products">
 		<nav>
 		<h3 style="display: inline-block;">
-					   <a href="products?animal=1" title="Aquaristics" class="products" style="text-decoration: none">АКВАРИСТИКА</a> 
+					   
 				&nbsp; <a href="products?animal=2" title="Cats" class="products" style="text-decoration: none">КОТКИ</a>
 				&nbsp; <a href="products?animal=3" title="Dogs" class="products" style="text-decoration: none">КУЧЕТА</a>
 				&nbsp; <a href="products?animal=4" title="LittleFellows" class="products" style="text-decoration: none">МАЛКИ ЖИВОТНИ</a>
+				&nbsp; <a href="products?animal=1" title="Aquaristics" class="products" style="text-decoration: none">АКВАРИСТИКА</a> 
 				&nbsp; <a href="products?animal=5" title="Birds" class="products" style="text-decoration: none">ПТИЦИ</a> 
 				&nbsp; <a href="products?animal=6" title="Reptiles" class="products" style="text-decoration: none">ТЕРАРИСТИКА</a> &nbsp;
 		</h3>

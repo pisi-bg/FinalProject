@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.dao.DeliveryInfoDao;
 import model.dao.OrderDao;
+import model.pojo.DeliveryInfo;
 import model.pojo.User;
 
 /**
@@ -33,6 +35,10 @@ public class DeliverInfoServlet extends HttpServlet {
 		ArrayList<String> cities = null;
 		try {
 			cities = OrderDao.getInstance().getCitiesNames();
+			ArrayList<DeliveryInfo> deliveries = DeliveryInfoDao.getInstance().getListDeliveryInfosForUser(u.getId());
+			if (deliveries != null && !deliveries.isEmpty()) {
+				request.setAttribute("deliveries", deliveries);
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

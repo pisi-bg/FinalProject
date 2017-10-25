@@ -1,18 +1,20 @@
-package model.pojo;
+package model.dao;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public class Cart {
+import model.pojo.Product;
 
-	private static Cart instance;
+public class CartDao {
 
-	private Cart() {
+	private static CartDao instance;
+
+	private CartDao() {
 	}
 
-	public static synchronized Cart getInstance() {
+	public static synchronized CartDao getInstance() {
 		if (instance == null) {
-			instance = new Cart();
+			instance = new CartDao();
 		}
 		return instance;
 	}
@@ -40,6 +42,7 @@ public class Cart {
 			}
 			return cartPrice;
 		} else
+			// throw exception
 			return 0;
 
 	}
@@ -50,7 +53,7 @@ public class Cart {
 	// Product p = ProductDao.getInstance().getProduct(i);
 	// prod.put(p, 3 + i);
 	// }
-	// System.out.println(Cart.getInstance().calculatePriceForCart(prod));
+	// System.out.println(CartDao.getInstance().calculatePriceForCart(prod));
 	// }
 
 }

@@ -2,7 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"-->
+<!DOCTYPE html SYSTEM "about:legacy-compat">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,7 +33,8 @@
 					<th class="cart_description item">Продукт</th>
 					<th class="cart_unit item text-right">Цена</th>
 					<th class="cart_quantity item text-center">Количество</th>
-					<th class="cart_delete last_item">&nbsp;</th>
+					<th class="cart_delete last_item"></th>
+					<th width="5%"></th>
 					<th class="cart_total item text-right">Общо</th>
 				</tr>
 			</thead>
@@ -42,12 +44,15 @@
 					<c:set var="product" value="${productEntry.key}" />
 					<tr>
 						<td class="cart_product"><a
-							href="productdetail?productId=${product.id}"><img
+							href="productdetail?productId=${product.id}"> <img
 								src="${product.image }" alt="${product.description }" width="98"
-								height="98"></a></td>
-						<td class="cart_description"><p class="product-name"
-								align="center">
+								height="98">
+						</a></td>
+						<td class="cart_description">
+							<p class="product-name" align="center">
 								<a href="productdetail?productId=${product.id}">${product.description }</a>
+							</p>
+						</td>
 						<td class="cart_unit"><c:if test="${ product.discount == 0 }">
 								<ul style="list-style-type: none">
 									<li class="price regular-price"><span> <fmt:formatNumber
@@ -86,7 +91,8 @@
 									value="${ product.id }" name="productId">
 							</form>
 						</td>
-						<td align="center"><c:if test="${ product.discount == 0 }">
+						<td width="10%"></td>
+						<td align="right"><c:if test="${ product.discount == 0 }">
 								<fmt:formatNumber type="number" pattern="#####.##"
 									value="${ product.price * productEntry.value }" />лв.									
 							</c:if> <c:if test="${ product.discount != 0 }">
@@ -98,52 +104,53 @@
 			</tbody>
 			<tfoot class="">
 				<tr class="cart_total_price">
-					<td rowspan="4" colspan="2"
+					<td rowspan="2" colspan="2"
 						style="border: 1px solid #ccc; color: #000; background-color: #FFF">
 						<h3 style="text-transform: uppercase">Заплащане</h3> <br>
 						Заплащането се извършва с наложен платеж при получаване на
 						доставката <br>
 					</td>
 				</tr>
-				<tr class="cart_total_price">
-					<td colspan="3" class="total_price_container text-right"><span>Обща
-							цена: </span></td>
-					<td class="price" id="total_price_container"><span
-						id="total_price" style="font-size: 24px;"> <fmt:formatNumber
-								type="number" pattern="#####.##"
-								value="${ requestScope.priceForCart }" />лв.
-					</span></td>
-				</tr>
+
+
+				<td rowspan="3" colspan="3" class="total_price_container text-right">
+					<span>Обща цена: </span>
+				</td>
+				<td width="5%"></td>
+				<td class="cart_total item text-right" rowspan="3" colspan="2"
+					class="price" id="total_price_container"><span
+					id="total_price" style="font-size: 24px;"> <fmt:formatNumber
+							type="number" pattern="#####.##"
+							value="${ sessionScope.priceForCart }" />лв.
+				</span></td>
+
 			</tfoot>
 		</table>
 		<hr>
-
-		<tr class="cart_total_price">
-			<td rowspan="4" colspan="2"
-				style="border: 1px solid #ccc; color: #000; background-color: #FFF">
-				<h3 style="text-transform: uppercase">ПОРЪЧКИ</h3> <c:if
-					test="${ empty sessionScope.user }">
-					<br> ПОРЪЧКИ СЕ ПРИЕМАТ САМО ОТ РЕГИСТРИРАНИ ПОТРЕБИТЕЛИ  <br>
-				</c:if>
-			</td>
-			<td colspan="3" class="total_price_container text-right">
-				<p class="cart_navigation  clearfix inner-top" style="float: right">
-					<c:if test="${not empty sessionScope.user}">
-						<form action="deliveryInfo" method="get" >
-							<button type="submit" name="submit_fast_registration">
-								Потвърди поръчката</button>
-						</form>
-					</c:if>
-					<c:if test="${ empty sessionScope.user }">
-						<a href="login.jsp" title="LogIn" class="nav_user"
-							style="text-decoration: none">ВХОД</a> &nbsp;
-						<a href="regiser.html" title="Register" class="nav_user"
-							style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;
-						<a href="lostpass.jsp" title="LostPass" class="nav_user"
-							style="text-decoration: none">ЗАБРАВЕНА ПАРОЛА</a> &nbsp;											
-					</c:if>
-				</p>
-			</td>
+		
+		<h3 style=" color: #000; background-color: #FFF">ПОРЪЧКА</h3> 
+			<c:if test="${ empty sessionScope.user }">
+				<br> Поръчки се приемта само от регистрирани потребители <br>
+			</c:if>
+			
+		<p class="cart_navigation  clearfix inner-top" style=float:right;  >
+			<c:if test="${not empty sessionScope.user}">
+				<form action="deliveryInfo" method="get" >
+					<button type="submit" name="submit_fast_registration" >
+						Потвърди поръчката</button>
+				</form>
+			</c:if>
+			<c:if test="${ empty sessionScope.user }">
+				<a href="login.jsp" title="LogIn" class="nav_user"
+					style="text-decoration: none">ВХОД</a> &nbsp;
+				<a href="regiser.html" title="Register" class="nav_user"
+					style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;
+				<a href="lostpass.jsp" title="LostPass" class="nav_user"
+					style="text-decoration: none">ЗАБРАВЕНА ПАРОЛА</a> &nbsp;											
+			</c:if>
+		</p>
+		
+	
 	</c:if>
 </body>
 </html>

@@ -9,19 +9,15 @@ public class Order {
 	private long orderId;
 	private User user;
 	private LocalDateTime dateTime;
-	private double discount; // by default 0
 	private double finalPrice;
 	private long deliveryInfoId;
-	private DeliveryInfo deliveryInfo;
-
 	private HashMap<Product, Integer> products;
 
 	// constructor to send info in DB
-	public Order(User user, LocalDateTime datetime, double finalPrice, DeliveryInfo deliveryInfo,
+	public Order(User user, LocalDateTime datetime, double finalPrice, long deliveryInfoId,
 			HashMap<Product, Integer> products) {
 		this.user = user;
 		this.dateTime = datetime;
-		this.discount = discount;
 		this.finalPrice = finalPrice;
 		this.products = products;
 		this.deliveryInfoId = deliveryInfoId;
@@ -33,7 +29,6 @@ public class Order {
 		this.orderId = orderId;
 		this.user = user;
 		this.dateTime = datetime;
-		this.discount = discount;
 		this.finalPrice = finalPrice;
 		this.products = products;
 		this.deliveryInfoId = deliveryInfoId;
@@ -51,10 +46,6 @@ public class Order {
 
 	public LocalDateTime getDateTime() {
 		return dateTime;
-	}
-
-	public double getDiscount() {
-		return discount;
 	}
 
 	public double getFinalPrice() {
