@@ -1,5 +1,6 @@
 package model.pojo;
 
+import java.util.Collections;
 import java.util.Set;
 
 public class User {
@@ -78,6 +79,10 @@ public class User {
 	// returns user id
 	public long getId() {
 		return id;
+	}
+
+	public Set<Product> getFavorites() {
+		return Collections.unmodifiableSet(favorites);
 	}
 
 	// add favorites after adding it to DB

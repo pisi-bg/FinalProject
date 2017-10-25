@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.pojo.Cart;
+import model.dao.CartDao;
 import model.pojo.Product;
 
 /**
@@ -40,8 +40,8 @@ public class CartServlet extends HttpServlet {
 		HashMap<Product, Integer> cart = null;
 		if (oCart != null) {
 			cart = (HashMap<Product, Integer>) oCart;
-			double priceForCart = Cart.getInstance().calculatePriceForCart(cart);
-			request.setAttribute("priceForCart", priceForCart);
+			double priceForCart = CartDao.getInstance().calculatePriceForCart(cart);
+			request.getSession().setAttribute("priceForCart", priceForCart);
 		}
 		request.getRequestDispatcher("cart.jsp").forward(request, response);
 	}
